@@ -25,6 +25,7 @@ import com.bytedance.xhsdemo.ui.PostListEvent
 import com.bytedance.xhsdemo.ui.PostListState
 import com.bytedance.xhsdemo.ui.PostListViewModel
 import com.bytedance.xhsdemo.ui.WaterfallSpacingDecoration
+import com.bytedance.xhsdemo.utils.ToastUtils
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
@@ -121,8 +122,7 @@ class HomeFragment : Fragment() {
     private fun handleEvent(event: PostListEvent) {
         when (event) {
             is PostListEvent.ToastMessage -> {
-                android.widget.Toast.makeText(requireContext(), event.message, android.widget.Toast.LENGTH_SHORT)
-                    .show()
+                ToastUtils.show(requireContext(), event.message)
             }
         }
     }

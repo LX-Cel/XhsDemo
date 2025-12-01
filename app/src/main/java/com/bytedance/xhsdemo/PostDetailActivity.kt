@@ -3,6 +3,7 @@ package com.bytedance.xhsdemo
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -14,6 +15,7 @@ import coil.transform.CircleCropTransformation
 import com.bytedance.xhsdemo.databinding.ActivityPostDetailBinding
 import com.bytedance.xhsdemo.databinding.ItemCommentBinding
 import com.bytedance.xhsdemo.model.Post
+import com.bytedance.xhsdemo.utils.ToastUtils
 
 class PostDetailActivity : AppCompatActivity() {
 
@@ -100,5 +102,12 @@ class PostDetailActivity : AppCompatActivity() {
             @Suppress("DEPRECATION")
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
         }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev?.action == MotionEvent.ACTION_DOWN) {
+            ToastUtils.cancel()
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }

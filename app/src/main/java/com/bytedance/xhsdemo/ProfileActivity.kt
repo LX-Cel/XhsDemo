@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.view.MotionEvent
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -26,6 +27,7 @@ import com.bytedance.xhsdemo.databinding.ActivityProfileBinding
 import com.bytedance.xhsdemo.ui.profile.ProfileUiState
 import com.bytedance.xhsdemo.ui.profile.ProfileViewModel
 import com.bytedance.xhsdemo.ui.profile.ProfileViewModelFactory
+import com.bytedance.xhsdemo.utils.ToastUtils
 import kotlinx.coroutines.launch
 
 class ProfileActivity : AppCompatActivity() {
@@ -136,7 +138,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun toast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        ToastUtils.show(this, msg)
     }
 
     override fun finish() {
@@ -194,4 +196,11 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private enum class Tab { HOME, MARKET, MESSAGE, PROFILE }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev?.action == MotionEvent.ACTION_DOWN) {
+            ToastUtils.cancel()
+        }
+        return super.dispatchTouchEvent(ev)
+    }
 }

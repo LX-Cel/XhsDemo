@@ -4,12 +4,14 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.MotionEvent
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import coil.load
 import com.bytedance.xhsdemo.databinding.ActivityPublishBinding
 import com.bytedance.xhsdemo.model.Post
+import com.bytedance.xhsdemo.utils.ToastUtils
 import java.util.UUID
 
 class PublishActivity : AppCompatActivity() {
@@ -45,8 +47,7 @@ class PublishActivity : AppCompatActivity() {
         val title = binding.inputTitle.text?.toString()?.trim().orEmpty()
         val content = binding.inputContent.text?.toString()?.trim().orEmpty()
         if (title.isBlank() && content.isBlank() && selectedUri == null) {
-            Toast.makeText(this, getString(R.string.publish_need_content), Toast.LENGTH_SHORT)
-                .show()
+            ToastUtils.show(this, getString(R.string.publish_need_content))
             return
         }
         // 组装本地 Post 数据并通过 Intent 回传
@@ -84,5 +85,12 @@ class PublishActivity : AppCompatActivity() {
             "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80"
         private const val DEFAULT_AVATAR =
             "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=60"
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev?.action == MotionEvent.ACTION_DOWN) {
+            ToastUtils.cancel()
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }

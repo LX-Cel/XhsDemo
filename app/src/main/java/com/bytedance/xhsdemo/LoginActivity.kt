@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
+import android.view.MotionEvent
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,7 @@ import com.bytedance.xhsdemo.databinding.ActivityLoginBinding
 import com.bytedance.xhsdemo.ui.login.LoginUiState
 import com.bytedance.xhsdemo.ui.login.LoginViewModel
 import com.bytedance.xhsdemo.ui.login.LoginViewModelFactory
+import com.bytedance.xhsdemo.utils.ToastUtils
 import kotlinx.coroutines.launch
 
 class LoginActivity : AppCompatActivity() {
@@ -50,7 +52,7 @@ class LoginActivity : AppCompatActivity() {
     private fun setupViews() {
         binding.btnBack.setOnClickListener { finish() }
         binding.helpText.setOnClickListener {
-            Toast.makeText(this, getString(R.string.login_help_tip), Toast.LENGTH_SHORT).show()
+            ToastUtils.show(this, getString(R.string.login_help_tip))
         }
         binding.inputPhone.addTextChangedListener { viewModel.onPhoneChanged(it?.toString().orEmpty()) }
         binding.inputPassword.addTextChangedListener { viewModel.onPasswordChanged(it?.toString().orEmpty()) }
@@ -60,22 +62,22 @@ class LoginActivity : AppCompatActivity() {
         }
         binding.btnLogin.setOnClickListener { viewModel.submitLogin() }
         binding.switchVerifyCode.setOnClickListener {
-            Toast.makeText(this, getString(R.string.login_switch_verify), Toast.LENGTH_SHORT).show()
+            ToastUtils.show(this, getString(R.string.login_switch_verify))
         }
         binding.forgotPassword.setOnClickListener {
-            Toast.makeText(this, getString(R.string.login_forget_password_tip), Toast.LENGTH_SHORT).show()
+            ToastUtils.show(this, getString(R.string.login_forget_password_tip))
         }
         binding.socialWechat.setOnClickListener {
-            Toast.makeText(this, getString(R.string.login_wechat), Toast.LENGTH_SHORT).show()
+            ToastUtils.show(this, getString(R.string.login_wechat))
         }
         binding.socialQq.setOnClickListener {
-            Toast.makeText(this, getString(R.string.login_qq), Toast.LENGTH_SHORT).show()
+            ToastUtils.show(this, getString(R.string.login_qq))
         }
         binding.socialApple.setOnClickListener {
-            Toast.makeText(this, getString(R.string.login_apple), Toast.LENGTH_SHORT).show()
+            ToastUtils.show(this, getString(R.string.login_apple))
         }
         binding.btnAccountRecovery.setOnClickListener {
-            Toast.makeText(this, getString(R.string.login_account_recovery), Toast.LENGTH_SHORT).show()
+            ToastUtils.show(this, getString(R.string.login_account_recovery))
         }
     }
 
@@ -87,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
                 }
                 launch {
                     viewModel.events.collect {
-                        Toast.makeText(this@LoginActivity, it, Toast.LENGTH_SHORT).show()
+                        ToastUtils.show(this@LoginActivity, it)
                     }
                 }
             }
@@ -131,5 +133,12 @@ class LoginActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
         finish()
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev?.action == MotionEvent.ACTION_DOWN) {
+            ToastUtils.cancel()
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }

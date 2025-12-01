@@ -3,10 +3,12 @@ package com.bytedance.xhsdemo
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import com.bytedance.xhsdemo.data.SessionManager
 import com.bytedance.xhsdemo.databinding.ActivitySettingsBinding
+import com.bytedance.xhsdemo.utils.ToastUtils
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -49,5 +51,12 @@ class SettingsActivity : AppCompatActivity() {
             @Suppress("DEPRECATION")
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev?.action == MotionEvent.ACTION_DOWN) {
+            ToastUtils.cancel()
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }

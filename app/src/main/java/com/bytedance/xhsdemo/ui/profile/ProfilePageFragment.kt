@@ -7,19 +7,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import coil.load
@@ -33,6 +33,7 @@ import com.bytedance.xhsdemo.data.ProfileRepository
 import com.bytedance.xhsdemo.data.SessionManager
 import com.bytedance.xhsdemo.data.local.AppDatabase
 import com.bytedance.xhsdemo.databinding.FragmentProfileBinding
+import com.bytedance.xhsdemo.utils.ToastUtils
 import kotlinx.coroutines.launch
 
 class ProfilePageFragment : Fragment() {
@@ -40,9 +41,10 @@ class ProfilePageFragment : Fragment() {
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding!!
     private lateinit var sessionManager: SessionManager
-    private val viewModel: ProfileViewModel by viewModels {
+    private val viewModel: ProfileViewModel by lazy {
         val db = AppDatabase.getInstance(requireContext().applicationContext)
-        ProfileViewModelFactory(ProfileRepository(db.profileDao()))
+        val factory = ProfileViewModelFactory(ProfileRepository(db.profileDao()))
+        ViewModelProvider(this, factory)[ProfileViewModel::class.java]
     }
 
     private val pickMedia = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
@@ -141,7 +143,7 @@ class ProfilePageFragment : Fragment() {
     }
 
     private fun toast(msg: String) {
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+        ToastUtils.show(requireContext(), msg)
     }
 
     private fun applyInsets() {

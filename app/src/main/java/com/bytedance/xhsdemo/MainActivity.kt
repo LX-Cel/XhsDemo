@@ -14,8 +14,10 @@ import androidx.core.view.GravityCompat
 import android.widget.Toast
 import androidx.drawerlayout.widget.DrawerLayout
 import android.view.View
+import android.view.MotionEvent
 import com.bytedance.xhsdemo.data.SessionManager
 import com.bytedance.xhsdemo.databinding.ActivityMainBinding
+import com.bytedance.xhsdemo.utils.ToastUtils
 import com.bytedance.xhsdemo.ui.home.HomeFragment
 import com.bytedance.xhsdemo.ui.placeholder.PlaceholderFragment
 import com.bytedance.xhsdemo.ui.profile.ProfilePageFragment
@@ -102,7 +104,7 @@ class MainActivity : AppCompatActivity() {
                     }
                     else -> null
                 }
-                text?.let { Toast.makeText(this@MainActivity, it, Toast.LENGTH_SHORT).show() }
+                text?.let { ToastUtils.show(this@MainActivity, it.toString()) }
             }
             itemAddFriend.setOnClickListener(toastListener)
             itemCreatorCenter.setOnClickListener(toastListener)
@@ -226,5 +228,12 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         binding.drawerLayout.closeDrawer(GravityCompat.START, false)
         setNavigationEnabled(true)
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (ev?.action == MotionEvent.ACTION_DOWN) {
+            ToastUtils.cancel()
+        }
+        return super.dispatchTouchEvent(ev)
     }
 }
