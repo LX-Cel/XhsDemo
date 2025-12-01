@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.bytedance.xhsdemo.databinding.ActivityPostDetailBinding
@@ -18,8 +21,15 @@ class PostDetailActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivityPostDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.detailToolbar) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(v.paddingLeft, systemBars.top, v.paddingRight, v.paddingBottom)
+            insets
+        }
 
         binding.navBack.setOnClickListener {
             onBackPressedDispatcher.onBackPressed()
@@ -42,8 +52,8 @@ class PostDetailActivity : AppCompatActivity() {
     private fun bindPost(post: Post) {
         binding.detailCover.load(post.imageUrl) {
             crossfade(true)
-            placeholder(R.drawable.bg_image_placeholder)
-            error(R.drawable.bg_image_placeholder)
+            placeholder(R.drawable.bg_placeholder_white)
+            error(R.drawable.bg_placeholder_white)
         }
         binding.detailTitle.text = post.title
         binding.detailContent.text = post.content
