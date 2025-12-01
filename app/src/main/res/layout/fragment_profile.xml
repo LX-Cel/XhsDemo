@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.profile.ProfilePageFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/profileContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <View
+            android:id="@+id/headerBg"
+            android:layout_width="0dp"
+            android:layout_height="280dp"
+            android:background="@drawable/bg_profile_header"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnDrawer"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="@dimen/spacing_16"
+            android:layout_marginTop="@dimen/spacing_16"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/profile_menu"
+            android:padding="6dp"
+            android:src="@drawable/ic_menu"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/btnShare"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="@dimen/spacing_16"
+            android:layout_marginTop="@dimen/spacing_16"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/profile_share"
+            android:padding="6dp"
+            android:src="@drawable/ic_more"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/avatarImage"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:layout_marginStart="@dimen/spacing_16"
+            android:layout_marginTop="@dimen/spacing_40"
+            android:background="@drawable/bg_avatar_placeholder"
+            android:contentDescription="@null"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_empty" />
+
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_16"
+            android:layout_marginTop="@dimen/spacing_16"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/avatarImage"
+            app:layout_constraintTop_toTopOf="@id/avatarImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="Sherry ~" />
+
+        <TextView
+            android:id="@+id/profileId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_16"
+            android:layout_marginTop="@dimen/spacing_8"
+            android:text="小红书号：8158044597"
+            android:textColor="#E6FFFFFF"
+            android:textSize="14sp"
+            app:layout_constraintStart_toEndOf="@id/avatarImage"
+            app:layout_constraintTop_toBottomOf="@id/profileName" />
+
+        <TextView
+            android:id="@+id/profileSignature"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_12"
+            android:layout_marginStart="@dimen/spacing_16"
+            android:layout_marginEnd="@dimen/spacing_16"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/avatarImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="点击这里，填写简介" />
+
+        <LinearLayout
+            android:id="@+id/tagsRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_16"
+            android:layout_marginTop="@dimen/spacing_8"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profileSignature">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_social_circle"
+                android:paddingStart="@dimen/spacing_12"
+                android:paddingEnd="@dimen/spacing_12"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:text="天秤座"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_8"
+                android:background="@drawable/bg_social_circle"
+                android:paddingStart="@dimen/spacing_12"
+                android:paddingEnd="@dimen/spacing_12"
+                android:paddingTop="6dp"
+                android:paddingBottom="6dp"
+                android:text="黑龙江哈尔滨"
+                android:textColor="@color/black"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/statsRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_16"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tagsRow">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/followCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="13"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="关注"
+                    android:textColor="#E6FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/fansCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="粉丝"
+                    android:textColor="#E6FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/likeCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="获赞与收藏"
+                    android:textColor="#E6FFFFFF"
+                    android:textSize="12sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/actionsRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_16"
+            android:layout_marginTop="@dimen/spacing_16"
+            android:layout_marginEnd="@dimen/spacing_16"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/statsRow">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEdit"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="1"
+                android:text="@string/profile_edit"
+                android:textColor="@color/white"
+                app:strokeColor="@color/white"
+                app:strokeWidth="1dp" />
+
+            <Space
+                android:layout_width="@dimen/spacing_12"
+                android:layout_height="1dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSettings"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:icon="@drawable/ic_settings"
+                android:iconTint="@color/white"
+                android:text=""
+                app:strokeColor="@color/white"
+                app:strokeWidth="1dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/quickRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_16"
+            android:layout_marginTop="@dimen/spacing_16"
+            android:layout_marginEnd="@dimen/spacing_16"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/actionsRow">
+
+            <TextView
+                android:id="@+id/quickInspiration"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_social_circle"
+                android:gravity="center"
+                android:text="@string/profile_quick_inspiration"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+
+            <Space
+                android:layout_width="@dimen/spacing_12"
+                android:layout_height="1dp" />
+
+            <TextView
+                android:id="@+id/quickHistory"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_social_circle"
+                android:gravity="center"
+                android:text="@string/profile_quick_history"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+
+            <Space
+                android:layout_width="@dimen/spacing_12"
+                android:layout_height="1dp" />
+
+            <TextView
+                android:id="@+id/quickGroup"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_social_circle"
+                android:gravity="center"
+                android:text="@string/profile_quick_group"
+                android:textColor="@color/black"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tabRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_24"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/quickRow"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:id="@+id/tabNote"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="笔记"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tabCollect"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="收藏"
+                android:textColor="@color/xhs_gray"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tabLiked"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="赞过"
+                android:textColor="@color/xhs_gray"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/emptyContainer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/tabRow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_empty"
+                android:contentDescription="@null" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_12"
+                android:text="@string/profile_empty_hint"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:id="@+id/drawerContainer"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_16"
+        android:layout_gravity="start">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:dividerHeight="8dp">
+
+                <TextView
+                    android:id="@+id/itemAddFriend"
+                    style="@style/ProfileDrawerItem"
+                    android:text="@string/drawer_add_friend" />
+
+                <TextView
+                    android:id="@+id/itemCreatorCenter"
+                    style="@style/ProfileDrawerItem"
+                    android:text="@string/drawer_creator" />
+
+                <TextView
+                    android:id="@+id/itemDraft"
+                    style="@style/ProfileDrawerItem"
+                    android:text="@string/drawer_draft" />
+
+                <TextView
+                    android:id="@+id/itemComments"
+                    style="@style/ProfileDrawerItem"
+                    android:text="@string/drawer_comment" />
+
+                <TextView
+                    android:id="@+id/itemHistory"
+                    style="@style/ProfileDrawerItem"
+                    android:text="@string/drawer_history" />
+
+                <TextView
+                    android:id="@+id/itemDownload"
+                    style="@style/ProfileDrawerItem"
+                    android:text="@string/drawer_download" />
+
+                <TextView
+                    android:id="@+id/itemOrder"
+                    style="@style/ProfileDrawerItem"
+                    android:text="@string/drawer_order" />
+
+                <TextView
+                    android:id="@+id/itemCart"
+                    style="@style/ProfileDrawerItem"
+                    android:text="@string/drawer_cart" />
+
+                <TextView
+                    android:id="@+id/itemWallet"
+                    style="@style/ProfileDrawerItem"
+                    android:text="@string/drawer_wallet" />
+
+                <TextView
+                    android:id="@+id/itemMini"
+                    style="@style/ProfileDrawerItem"
+                    android:text="@string/drawer_mini_app" />
+
+                <TextView
+                    android:id="@+id/itemCommunity"
+                    style="@style/ProfileDrawerItem"
+                    android:text="@string/drawer_public" />
+
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/spacing_12">
+
+            <TextView
+                android:id="@+id/itemScan"
+                style="@style/ProfileDrawerBottomItem"
+                android:text="@string/drawer_scan" />
+
+            <TextView
+                android:id="@+id/itemHelp"
+                style="@style/ProfileDrawerBottomItem"
+                android:layout_marginStart="@dimen/spacing_12"
+                android:text="@string/drawer_help" />
+
+            <TextView
+                android:id="@+id/itemSetting"
+                style="@style/ProfileDrawerBottomItem"
+                android:layout_marginStart="@dimen/spacing_12"
+                android:text="@string/drawer_setting" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>

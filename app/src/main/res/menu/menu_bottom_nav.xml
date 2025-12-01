@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:title="首页" />
+    <item
+        android:id="@+id/nav_market"
+        android:title="市集" />
+    <item
+        android:id="@+id/nav_message"
+        android:title="消息" />
+    <item
+        android:id="@+id/nav_profile"
+        android:title="我" />
+</menu>

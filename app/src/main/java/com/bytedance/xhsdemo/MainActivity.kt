@@ -3,156 +3,111 @@ package com.bytedance.xhsdemo
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import com.bytedance.xhsdemo.data.FakePostRepository
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.viewpager2.widget.ViewPager2
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import com.bytedance.xhsdemo.data.SessionManager
 import com.bytedance.xhsdemo.databinding.ActivityMainBinding
-import com.bytedance.xhsdemo.model.Post
-import com.bytedance.xhsdemo.ui.FooterState
-import com.bytedance.xhsdemo.ui.PostAdapter
-import com.bytedance.xhsdemo.ui.PostListEvent
-import com.bytedance.xhsdemo.ui.PostListState
-import com.bytedance.xhsdemo.ui.PostListViewModel
-import com.bytedance.xhsdemo.ui.WaterfallSpacingDecoration
-import kotlinx.coroutines.launch
+import com.bytedance.xhsdemo.ui.home.HomeFragment
+import com.bytedance.xhsdemo.ui.placeholder.PlaceholderFragment
+import com.bytedance.xhsdemo.ui.profile.ProfilePageFragment
+import com.google.android.material.navigation.NavigationBarView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var adapter: PostAdapter
-    private val viewModel: PostListViewModel by viewModels()
-
-    private val publishLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK && result.data != null) {
-                val newPost =
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        result.data?.getParcelableExtra(
-                            PublishActivity.EXTRA_NEW_POST,
-                            Post::class.java
-                        )
-                    } else {
-                        @Suppress("DEPRECATION")
-                        result.data?.getParcelableExtra<Post>(PublishActivity.EXTRA_NEW_POST)
-                    }
-                newPost?.let {
-                    FakePostRepository.addPost(it)
-                    // 发布页回传后刷新首页列表，保证新帖出现在顶部
-                    viewModel.refresh()
-                }
-            }
-        }
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        sessionManager = SessionManager(this)
+        AppCompatDelegate.setDefaultNightMode(sessionManager.getThemeMode())
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        if (!sessionManager.isLoggedIn()) {
+            startActivity(Intent(this, LoginActivity::class.java))
+            finish()
+            return
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.title = getString(R.string.feed_title)
-
-        setupList()
-        setupActions()
-        observeState()
-        // 首屏自动刷新数据
-        viewModel.refresh()
+        applyInsets()
+        setupViewPager()
+        setupBottomNav()
+        binding.fabPublish.setOnClickListener { openPublish() }
     }
 
-    private fun setupList() {
-        adapter = PostAdapter(
-            onItemClick = { post ->
-                val intent = Intent(this, PostDetailActivity::class.java)
-                intent.putExtra(PostDetailActivity.EXTRA_POST, post)
-                startActivity(intent)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                    overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, R.anim.slide_in_right, R.anim.slide_out_left)
-                } else {
-                    @Suppress("DEPRECATION")
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
-                }
-
-            },
-            onRetryClick = { viewModel.loadMore() }
+    private fun setupViewPager() {
+        binding.viewPager.adapter = MainPagerAdapter(
+            this,
+            listOf(
+                HomeFragment(),
+                PlaceholderFragment.newInstance("市集页面敬请期待"),
+                PlaceholderFragment.newInstance("消息页面敬请期待"),
+                ProfilePageFragment()
+            )
         )
-        val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
-        binding.postList.layoutManager = layoutManager
-        binding.postList.adapter = adapter
-        binding.postList.addItemDecoration(
-            WaterfallSpacingDecoration(resources.getDimensionPixelSize(R.dimen.spacing_12))
-        )
-        binding.postList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-                if (dy <= 0) return
-                val last = layoutManager.findLastVisibleItemPositions(null).maxOrNull() ?: 0
-                // 接近列表底部时触发分页加载
-                if (last >= adapter.itemCount - 4) {
-                    viewModel.loadMore()
+        binding.viewPager.isUserInputEnabled = false
+        binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                when (position) {
+                    0 -> binding.bottomNav.selectedItemId = R.id.nav_home
+                    1 -> binding.bottomNav.selectedItemId = R.id.nav_market
+                    2 -> binding.bottomNav.selectedItemId = R.id.nav_message
+                    3 -> binding.bottomNav.selectedItemId = R.id.nav_profile
                 }
             }
         })
     }
 
-    private fun setupActions() {
-        binding.swipeRefresh.setOnRefreshListener { viewModel.refresh() }
-        binding.btnRetry.setOnClickListener { viewModel.refresh() }
-        binding.addFab.setOnClickListener {
-            publishLauncher.launch(Intent(this, PublishActivity::class.java))
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                overrideActivityTransition(OVERRIDE_TRANSITION_OPEN, R.anim.slide_in_right, R.anim.slide_out_left)
-            } else {
-                @Suppress("DEPRECATION")
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
+    private fun setupBottomNav() {
+        binding.bottomNav.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_home -> binding.viewPager.currentItem = 0
+                R.id.nav_market -> binding.viewPager.currentItem = 1
+                R.id.nav_message -> binding.viewPager.currentItem = 2
+                R.id.nav_profile -> binding.viewPager.currentItem = 3
+                else -> return@OnItemSelectedListener false
             }
+            true
+        })
+    }
+
+    private fun applyInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNav) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom)
+            binding.fabPublish.translationY = -systemBars.bottom / 2f
+            insets
         }
     }
 
-    private fun observeState() {
-        // 在 STARTED 生命周期内收集状态/事件，避免内存泄漏
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                launch {
-                    viewModel.state.collect { renderState(it) }
-                }
-                launch {
-                    viewModel.events.collect { handleEvent(it) }
-                }
-            }
-        }
-    }
-
-    private fun renderState(state: PostListState) {
-        binding.swipeRefresh.isRefreshing = state.isRefreshing
-        adapter.submitList(state.items.toMutableList())
-        binding.emptyView.isVisible = state.showEmpty
-        binding.errorView.isVisible = state.showError
-        adapter.setFooterState(state.footerState)
-    }
-
-    private fun handleEvent(event: PostListEvent) {
-        when (event) {
-            is PostListEvent.ToastMessage -> {
-                android.widget.Toast.makeText(this, event.message, android.widget.Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
-    }
-
-    override fun finish() {
-        super.finish()
+    private fun openPublish() {
+        startActivity(Intent(this, PublishActivity::class.java))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-            overrideActivityTransition(OVERRIDE_TRANSITION_CLOSE, R.anim.slide_in_left, R.anim.slide_out_right)
+            overrideActivityTransition(
+                OVERRIDE_TRANSITION_OPEN,
+                R.anim.slide_in_right,
+                R.anim.slide_out_left
+            )
         } else {
             @Suppress("DEPRECATION")
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right)
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
+    }
 
+    private class MainPagerAdapter(
+        activity: FragmentActivity,
+        private val fragments: List<Fragment>
+    ) : FragmentStateAdapter(activity) {
+        override fun getItemCount(): Int = fragments.size
+        override fun createFragment(position: Int): Fragment = fragments[position]
     }
 }
