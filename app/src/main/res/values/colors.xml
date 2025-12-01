@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="xhs_red">#FF2D55</color>
+    <color name="xhs_gray">#FF8A8A8A</color>
+    <color name="xhs_light_gray">#FFF5F5F5</color>
+    <color name="xhs_divider">#FFEAEAEA</color>
+</resources>

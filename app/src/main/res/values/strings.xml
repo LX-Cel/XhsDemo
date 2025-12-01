@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="feed_title">灵感广场</string>
+    <string name="feed_empty">还没有内容，发布一条吧</string>
+    <string name="feed_error">网络有点问题，稍后重试</string>
+    <string name="action_retry">重试</string>
+    <string name="action_publish">发布</string>
+    <string name="detail_title">笔记详情</string>
+    <string name="comments_title">评论区</string>
+    <string name="publish_title">发布笔记</string>
+    <string name="publish_choose_image">选择相册图片</string>
+    <string name="publish_input_title_hint">添加一个吸引人的标题</string>
+    <string name="publish_input_content_hint">分享你的灵感、心得或故事</string>
+    <string name="publish_submit">立即发布</string>
+    <string name="loading_more">正在加载更多...</string>
+    <string name="load_error">加载失败，点我重试</string>
+    <string name="load_no_more">已经到底啦</string>
+    <string name="no_comment">暂无评论，快来留下第一个吧</string>
+    <string name="publish_need_content">写点内容或选择一张图吧～</string>
+</resources>
