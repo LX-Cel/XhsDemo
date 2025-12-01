@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bytedance.xhsdemo.PostDetailActivity
+import com.bytedance.xhsdemo.MainActivity
 import com.bytedance.xhsdemo.R
 import com.bytedance.xhsdemo.databinding.FragmentHomeBinding
 import com.bytedance.xhsdemo.model.Post
@@ -80,12 +81,16 @@ class HomeFragment : Fragment() {
     private fun setupActions() {
         binding.swipeRefresh.setOnRefreshListener { viewModel.refresh() }
         binding.btnRetry.setOnClickListener { viewModel.refresh() }
+        binding.btnMenu.setOnClickListener {
+            (activity as? MainActivity)?.openDrawer()
+        }
     }
 
     private fun applyInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.toolbar) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.statusBarSpace) { v, insets ->
             val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-            v.setPadding(v.paddingLeft, v.paddingTop + top, v.paddingRight, v.paddingBottom)
+            v.layoutParams.height = top
+            v.requestLayout()
             insets
         }
     }

@@ -135,6 +135,14 @@ class MainActivity : AppCompatActivity() {
             binding.fabPublish.translationY = -systemBars.bottom / 2f
             insets
         }
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.drawerMenu.root) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            binding.drawerMenu.drawerStatusBarSpace.layoutParams = binding.drawerMenu.drawerStatusBarSpace.layoutParams.apply {
+                height = systemBars.top
+            }
+            insets
+        }
     }
 
     private fun openPublish() {

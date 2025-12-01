@@ -47,6 +47,7 @@
     <string name="profile_quick_history">浏览记录</string>
     <string name="profile_quick_group">群聊</string>
     <string name="profile_empty_hint">发一张最近的游戏截图</string>
+    <string name="action_search">搜索</string>
 
     <!-- Drawer -->
     <string name="drawer_add_friend">添加好友</string>
