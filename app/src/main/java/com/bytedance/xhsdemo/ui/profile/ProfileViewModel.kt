@@ -11,6 +11,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+import kotlinx.coroutines.flow.update
+
 data class ProfileUiState(
     val profile: UserProfileEntity? = null,
     val isLoading: Boolean = false
@@ -25,11 +27,10 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
     val events = _events.asSharedFlow()
 
     fun load() {
-        if (_state.value.isLoading) return
         viewModelScope.launch {
-            _state.emit(ProfileUiState(isLoading = true))
+            _state.update { it.copy(isLoading = true) }
             val data = repository.loadProfile()
-            _state.emit(ProfileUiState(profile = data, isLoading = false))
+            _state.update { it.copy(profile = data, isLoading = false) }
         }
     }
 

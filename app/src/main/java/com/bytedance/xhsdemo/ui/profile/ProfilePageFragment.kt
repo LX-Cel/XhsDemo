@@ -124,6 +124,7 @@ class ProfilePageFragment : Fragment() {
     private fun renderState(state: ProfileUiState) {
         state.profile?.let { profile ->
             binding.profileName.text = profile.displayName
+            binding.profileName.setTextColor(Color.WHITE) // Ensure text color is white
             binding.profileSignature.text = profile.signature
             binding.avatarImage.load(profile.avatarUrl) {
                 crossfade(true)
