@@ -8,308 +8,347 @@
     android:background="@color/white"
     tools:context=".ui.profile.ProfilePageFragment">
 
-        <View
-            android:id="@+id/headerBg"
-            android:layout_width="0dp"
-            android:layout_height="280dp"
-            android:background="@drawable/bg_profile_header"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+    <View
+        android:id="@+id/headerBg"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="@drawable/bg_profile_header"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <ImageButton
-            android:id="@+id/btnDrawer"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginStart="@dimen/spacing_16"
-            android:layout_marginTop="@dimen/spacing_16"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/profile_menu"
-            android:padding="6dp"
-            android:src="@drawable/ic_menu"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <View
+        android:id="@+id/statusBarSpace"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageButton
-            android:id="@+id/btnShare"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="@dimen/spacing_16"
-            android:layout_marginTop="@dimen/spacing_16"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/profile_share"
-            android:padding="6dp"
-            android:src="@drawable/ic_more"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ImageButton
+        android:id="@+id/btnDrawer"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/profile_menu"
+        android:padding="6dp"
+        android:src="@drawable/ic_menu"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusBarSpace" />
 
-        <ImageView
-            android:id="@+id/avatarImage"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:layout_marginStart="@dimen/spacing_16"
-            android:layout_marginTop="@dimen/spacing_40"
-            android:background="@drawable/bg_avatar_placeholder"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_empty" />
+    <ImageButton
+        android:id="@+id/btnShare"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/profile_share"
+        android:padding="6dp"
+        android:src="@drawable/ic_more"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusBarSpace" />
+
+    <ImageButton
+        android:id="@+id/btnScan"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/drawer_scan"
+        android:padding="6dp"
+        android:src="@drawable/ic_scan"
+        app:tint="@color/white"
+        app:layout_constraintEnd_toStartOf="@id/btnShare"
+        app:layout_constraintTop_toBottomOf="@id/statusBarSpace" />
+
+    <ImageView
+        android:id="@+id/avatarImage"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_avatar_placeholder"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnDrawer"
+        tools:src="@drawable/ic_empty" />
+
+    <TextView
+        android:id="@+id/profileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@id/avatarImage"
+        app:layout_constraintTop_toTopOf="@id/avatarImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="Sherry ~" />
+
+    <TextView
+        android:id="@+id/profileId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:text="小红书号：8158044597"
+        android:textColor="#E6FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@id/avatarImage"
+        app:layout_constraintTop_toBottomOf="@id/profileName" />
+
+    <TextView
+        android:id="@+id/profileSignature"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_12"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/avatarImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:text="点击这里，填写简介" />
+
+    <LinearLayout
+        android:id="@+id/tagsRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileSignature">
 
         <TextView
-            android:id="@+id/profileName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_16"
-            android:layout_marginTop="@dimen/spacing_16"
-            android:textColor="@color/white"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@id/avatarImage"
-            app:layout_constraintTop_toTopOf="@id/avatarImage"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="Sherry ~" />
-
-        <TextView
-            android:id="@+id/profileId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_16"
-            android:layout_marginTop="@dimen/spacing_8"
-            android:text="小红书号：8158044597"
-            android:textColor="#E6FFFFFF"
-            android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@id/avatarImage"
-            app:layout_constraintTop_toBottomOf="@id/profileName" />
+            android:background="@drawable/bg_profile_tag_pill"
+            android:paddingStart="@dimen/spacing_12"
+            android:paddingEnd="@dimen/spacing_12"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="天秤座"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/profileSignature"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_12"
-            android:layout_marginStart="@dimen/spacing_16"
-            android:layout_marginEnd="@dimen/spacing_16"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/avatarImage"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="点击这里，填写简介" />
-
-        <LinearLayout
-            android:id="@+id/tagsRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_16"
-            android:layout_marginTop="@dimen/spacing_8"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profileSignature">
+            android:layout_marginStart="@dimen/spacing_8"
+            android:background="@drawable/bg_profile_tag_pill"
+            android:paddingStart="@dimen/spacing_12"
+            android:paddingEnd="@dimen/spacing_12"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="黑龙江哈尔滨"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_social_circle"
-                android:paddingStart="@dimen/spacing_12"
-                android:paddingEnd="@dimen/spacing_12"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
-                android:text="天秤座"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/spacing_8"
-                android:background="@drawable/bg_social_circle"
-                android:paddingStart="@dimen/spacing_12"
-                android:paddingEnd="@dimen/spacing_12"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
-                android:text="黑龙江哈尔滨"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
-        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/statsRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tagsRow">
 
         <LinearLayout
-            android:id="@+id/statsRow"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_16"
             android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tagsRow">
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <TextView
+                android:id="@+id/followCount"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/followCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="13"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="关注"
-                    android:textColor="#E6FFFFFF"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/fansCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="粉丝"
-                    android:textColor="#E6FFFFFF"
-                    android:textSize="12sp" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/likeCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@color/white"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="获赞与收藏"
-                    android:textColor="#E6FFFFFF"
-                    android:textSize="12sp" />
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/actionsRow"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_16"
-            android:layout_marginTop="@dimen/spacing_16"
-            android:layout_marginEnd="@dimen/spacing_16"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/statsRow">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnEdit"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="@string/profile_edit"
+                android:text="13"
                 android:textColor="@color/white"
-                app:strokeColor="@color/white"
-                app:strokeWidth="1dp" />
-
-            <Space
-                android:layout_width="@dimen/spacing_12"
-                android:layout_height="1dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSettings"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:icon="@drawable/ic_settings"
-                android:iconTint="@color/white"
-                android:text=""
-                app:strokeColor="@color/white"
-                app:strokeWidth="1dp" />
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="关注"
+                android:textColor="#E6FFFFFF"
+                android:textSize="12sp" />
         </LinearLayout>
 
+        <Space
+            android:layout_width="@dimen/spacing_24"
+            android:layout_height="1dp" />
+
         <LinearLayout
-            android:id="@+id/quickRow"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_16"
-            android:layout_marginTop="@dimen/spacing_16"
-            android:layout_marginEnd="@dimen/spacing_16"
             android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/actionsRow">
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/quickInspiration"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_social_circle"
-                android:gravity="center"
-                android:text="@string/profile_quick_inspiration"
-                android:textColor="@color/black"
-                android:textSize="13sp" />
-
-            <Space
-                android:layout_width="@dimen/spacing_12"
-                android:layout_height="1dp" />
-
+                android:id="@+id/fansCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
             <TextView
-                android:id="@+id/quickHistory"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_social_circle"
-                android:gravity="center"
-                android:text="@string/profile_quick_history"
-                android:textColor="@color/black"
-                android:textSize="13sp" />
-
-            <Space
-                android:layout_width="@dimen/spacing_12"
-                android:layout_height="1dp" />
-
-            <TextView
-                android:id="@+id/quickGroup"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_social_circle"
-                android:gravity="center"
-                android:text="@string/profile_quick_group"
-                android:textColor="@color/black"
-                android:textSize="13sp" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="粉丝"
+                android:textColor="#E6FFFFFF"
+                android:textSize="12sp" />
         </LinearLayout>
 
+        <Space
+            android:layout_width="@dimen/spacing_24"
+            android:layout_height="1dp" />
+
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/likeCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="获赞与收藏"
+                android:textColor="#E6FFFFFF"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/actionsRow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/statsRow"
+        app:layout_constraintBottom_toBottomOf="@id/statsRow">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEdit"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:text="@string/profile_edit"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:minHeight="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            app:strokeColor="@color/white"
+            app:strokeWidth="1dp"
+            app:cornerRadius="16dp" />
+
+        <Space
+            android:layout_width="@dimen/spacing_12"
+            android:layout_height="1dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSettings"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:icon="@drawable/ic_settings"
+            android:iconTint="@color/white"
+            android:text=""
+            android:padding="0dp"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:strokeColor="@color/white"
+            app:strokeWidth="1dp"
+            app:cornerRadius="16dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/quickRow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/actionsRow">
+
+        <TextView
+            android:id="@+id/quickInspiration"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_profile_quick_action"
+            android:gravity="center"
+            android:text="@string/profile_quick_inspiration"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <Space
+            android:layout_width="@dimen/spacing_12"
+            android:layout_height="1dp" />
+
+        <TextView
+            android:id="@+id/quickHistory"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_profile_quick_action"
+            android:gravity="center"
+            android:text="@string/profile_quick_history"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <Space
+            android:layout_width="@dimen/spacing_12"
+            android:layout_height="1dp" />
+
+        <TextView
+            android:id="@+id/quickGroup"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_profile_quick_action"
+            android:gravity="center"
+            android:text="@string/profile_quick_group"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+    </LinearLayout>        <LinearLayout
             android:id="@+id/tabRow"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

@@ -75,6 +75,7 @@ class ProfilePageFragment : Fragment() {
         binding.quickInspiration.setOnClickListener { toast("创作灵感") }
         binding.quickHistory.setOnClickListener { toast("浏览记录") }
         binding.quickGroup.setOnClickListener { toast("群聊") }
+        binding.btnScan.setOnClickListener { toast("扫一扫") }
 
         binding.tabNote.setOnClickListener { toast("笔记") }
         binding.tabCollect.setOnClickListener { toast("收藏") }
@@ -119,7 +120,9 @@ class ProfilePageFragment : Fragment() {
     private fun applyInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.profileContent) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(v.paddingLeft, systemBars.top, v.paddingRight, v.paddingBottom)
+            binding.statusBarSpace.layoutParams.height = systemBars.top
+            binding.statusBarSpace.requestLayout()
+            v.setPadding(v.paddingLeft, 0, v.paddingRight, v.paddingBottom)
             insets
         }
     }
