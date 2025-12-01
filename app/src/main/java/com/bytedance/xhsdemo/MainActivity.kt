@@ -87,9 +87,22 @@ class MainActivity : AppCompatActivity() {
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
             }
             val toastListener = View.OnClickListener { v ->
-                if (v is android.widget.TextView) {
-                    Toast.makeText(this@MainActivity, v.text, Toast.LENGTH_SHORT).show()
+                val text = when (v) {
+                    is android.widget.TextView -> v.text
+                    is android.view.ViewGroup -> {
+                        var foundText: CharSequence? = null
+                        for (i in 0 until v.childCount) {
+                            val child = v.getChildAt(i)
+                            if (child is android.widget.TextView) {
+                                foundText = child.text
+                                break
+                            }
+                        }
+                        foundText
+                    }
+                    else -> null
                 }
+                text?.let { Toast.makeText(this@MainActivity, it, Toast.LENGTH_SHORT).show() }
             }
             itemAddFriend.setOnClickListener(toastListener)
             itemCreatorCenter.setOnClickListener(toastListener)
