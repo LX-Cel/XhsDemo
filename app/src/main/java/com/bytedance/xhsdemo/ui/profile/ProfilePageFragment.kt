@@ -1,8 +1,8 @@
 package com.bytedance.xhsdemo.ui.profile
 
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,9 +11,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
-import androidx.core.view.isVisible
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -22,6 +22,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.bytedance.xhsdemo.LoginActivity
+import com.bytedance.xhsdemo.MainActivity
 import com.bytedance.xhsdemo.PublishActivity
 import com.bytedance.xhsdemo.R
 import com.bytedance.xhsdemo.SettingsActivity
@@ -64,29 +65,16 @@ class ProfilePageFragment : Fragment() {
         applyInsets()
     }
 
+
+
     private fun setupClicks() {
-        binding.btnDrawer.setOnClickListener { binding.drawerLayout.openDrawer(GravityCompat.START) }
+        binding.btnDrawer.setOnClickListener { (activity as? MainActivity)?.openDrawer() }
         binding.btnShare.setOnClickListener { toast("分享") }
         binding.btnEdit.setOnClickListener { toast("编辑资料") }
         binding.btnSettings.setOnClickListener { openSettings() }
         binding.quickInspiration.setOnClickListener { toast("创作灵感") }
         binding.quickHistory.setOnClickListener { toast("浏览记录") }
         binding.quickGroup.setOnClickListener { toast("群聊") }
-
-        binding.itemAddFriend.setOnClickListener { toast(binding.itemAddFriend.text.toString()) }
-        binding.itemCreatorCenter.setOnClickListener { toast(binding.itemCreatorCenter.text.toString()) }
-        binding.itemDraft.setOnClickListener { toast(binding.itemDraft.text.toString()) }
-        binding.itemComments.setOnClickListener { toast(binding.itemComments.text.toString()) }
-        binding.itemHistory.setOnClickListener { toast(binding.itemHistory.text.toString()) }
-        binding.itemDownload.setOnClickListener { toast(binding.itemDownload.text.toString()) }
-        binding.itemOrder.setOnClickListener { toast(binding.itemOrder.text.toString()) }
-        binding.itemCart.setOnClickListener { toast(binding.itemCart.text.toString()) }
-        binding.itemWallet.setOnClickListener { toast(binding.itemWallet.text.toString()) }
-        binding.itemMini.setOnClickListener { toast(binding.itemMini.text.toString()) }
-        binding.itemCommunity.setOnClickListener { toast(binding.itemCommunity.text.toString()) }
-        binding.itemScan.setOnClickListener { toast(binding.itemScan.text.toString()) }
-        binding.itemHelp.setOnClickListener { toast(binding.itemHelp.text.toString()) }
-        binding.itemSetting.setOnClickListener { openSettings() }
 
         binding.tabNote.setOnClickListener { toast("笔记") }
         binding.tabCollect.setOnClickListener { toast("收藏") }
@@ -116,7 +104,7 @@ class ProfilePageFragment : Fragment() {
                 placeholder(R.drawable.bg_avatar_placeholder)
             }
         }
-        binding.emptyContainer.isVisible = true
+        binding.emptyContainer.visibility = View.VISIBLE
     }
 
     private fun openSettings() {
@@ -137,7 +125,6 @@ class ProfilePageFragment : Fragment() {
     }
 
     private fun styleTabs() {
-        // 内部 tab 栏（笔记/收藏/赞过）
         styleTab(binding.tabNote, true)
         styleTab(binding.tabCollect, false)
         styleTab(binding.tabLiked, false)
@@ -148,7 +135,7 @@ class ProfilePageFragment : Fragment() {
             ContextCompat.getColor(requireContext(), if (selected) R.color.black else R.color.xhs_gray)
         textView.setTextColor(color)
         textView.setTypeface(null, if (selected) Typeface.BOLD else Typeface.NORMAL)
-        textView.textSize = if (selected) 16f else 16f
+        textView.textSize = 16f
     }
 
     private fun applyTransitionOpen() {
@@ -158,6 +145,7 @@ class ProfilePageFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        (activity as? MainActivity)?.setNavigationEnabled(true)
         _binding = null
     }
 }

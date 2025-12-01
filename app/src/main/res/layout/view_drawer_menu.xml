@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawerContainer"
+    android:layout_width="300dp"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_16"
+    android:layout_gravity="start">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:dividerHeight="8dp">
+
+            <TextView
+                android:id="@+id/itemAddFriend"
+                style="@style/ProfileDrawerItem"
+                android:text="@string/drawer_add_friend" />
+
+            <TextView
+                android:id="@+id/itemCreatorCenter"
+                style="@style/ProfileDrawerItem"
+                android:text="@string/drawer_creator" />
+
+            <TextView
+                android:id="@+id/itemDraft"
+                style="@style/ProfileDrawerItem"
+                android:text="@string/drawer_draft" />
+
+            <TextView
+                android:id="@+id/itemComments"
+                style="@style/ProfileDrawerItem"
+                android:text="@string/drawer_comment" />
+
+            <TextView
+                android:id="@+id/itemHistory"
+                style="@style/ProfileDrawerItem"
+                android:text="@string/drawer_history" />
+
+            <TextView
+                android:id="@+id/itemDownload"
+                style="@style/ProfileDrawerItem"
+                android:text="@string/drawer_download" />
+
+            <TextView
+                android:id="@+id/itemOrder"
+                style="@style/ProfileDrawerItem"
+                android:text="@string/drawer_order" />
+
+            <TextView
+                android:id="@+id/itemCart"
+                style="@style/ProfileDrawerItem"
+                android:text="@string/drawer_cart" />
+
+            <TextView
+                android:id="@+id/itemWallet"
+                style="@style/ProfileDrawerItem"
+                android:text="@string/drawer_wallet" />
+
+            <TextView
+                android:id="@+id/itemMini"
+                style="@style/ProfileDrawerItem"
+                android:text="@string/drawer_mini_app" />
+
+            <TextView
+                android:id="@+id/itemCommunity"
+                style="@style/ProfileDrawerItem"
+                android:text="@string/drawer_public" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/spacing_12">
+
+        <TextView
+            android:id="@+id/itemScan"
+            style="@style/ProfileDrawerBottomItem"
+            android:text="@string/drawer_scan" />
+
+        <TextView
+            android:id="@+id/itemHelp"
+            style="@style/ProfileDrawerBottomItem"
+            android:layout_marginStart="@dimen/spacing_12"
+            android:text="@string/drawer_help" />
+
+        <TextView
+            android:id="@+id/itemSetting"
+            style="@style/ProfileDrawerBottomItem"
+            android:layout_marginStart="@dimen/spacing_12"
+            android:text="@string/drawer_setting" />
+    </LinearLayout>
+</LinearLayout>

@@ -3,12 +3,17 @@ package com.bytedance.xhsdemo
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.viewpager2.widget.ViewPager2
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.GravityCompat
+import android.widget.Toast
+import androidx.drawerlayout.widget.DrawerLayout
+import android.view.View
 import com.bytedance.xhsdemo.data.SessionManager
 import com.bytedance.xhsdemo.databinding.ActivityMainBinding
 import com.bytedance.xhsdemo.ui.home.HomeFragment
@@ -40,7 +45,50 @@ class MainActivity : AppCompatActivity() {
         applyInsets()
         setupViewPager()
         setupBottomNav()
+        setupDrawer()
         binding.fabPublish.setOnClickListener { openPublish() }
+    }
+
+    private fun setupDrawer() {
+        binding.drawerLayout.setScrimColor(Color.TRANSPARENT)
+        binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
+            override fun onDrawerOpened(drawerView: View) {
+                setNavigationEnabled(false)
+            }
+
+            override fun onDrawerClosed(drawerView: View) {
+                setNavigationEnabled(true)
+            }
+        })
+
+        with(binding.drawerMenu) {
+            itemSetting.setOnClickListener {
+                startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+                binding.drawerLayout.closeDrawer(GravityCompat.START)
+            }
+            val toastListener = View.OnClickListener { v ->
+                if (v is android.widget.TextView) {
+                    Toast.makeText(this@MainActivity, v.text, Toast.LENGTH_SHORT).show()
+                }
+            }
+            itemAddFriend.setOnClickListener(toastListener)
+            itemCreatorCenter.setOnClickListener(toastListener)
+            itemDraft.setOnClickListener(toastListener)
+            itemComments.setOnClickListener(toastListener)
+            itemHistory.setOnClickListener(toastListener)
+            itemDownload.setOnClickListener(toastListener)
+            itemOrder.setOnClickListener(toastListener)
+            itemCart.setOnClickListener(toastListener)
+            itemWallet.setOnClickListener(toastListener)
+            itemMini.setOnClickListener(toastListener)
+            itemCommunity.setOnClickListener(toastListener)
+            itemScan.setOnClickListener(toastListener)
+            itemHelp.setOnClickListener(toastListener)
+        }
+    }
+
+    fun openDrawer() {
+        binding.drawerLayout.openDrawer(GravityCompat.START)
     }
 
     private fun setupViewPager() {
@@ -109,5 +157,16 @@ class MainActivity : AppCompatActivity() {
     ) : FragmentStateAdapter(activity) {
         override fun getItemCount(): Int = fragments.size
         override fun createFragment(position: Int): Fragment = fragments[position]
+    }
+
+    fun setNavigationEnabled(enabled: Boolean) {
+        binding.bottomNav.isEnabled = enabled
+        binding.fabPublish.isEnabled = enabled
+    }
+
+    fun resetDrawerState() {
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+        binding.drawerLayout.closeDrawer(GravityCompat.START, false)
+        setNavigationEnabled(true)
     }
 }
