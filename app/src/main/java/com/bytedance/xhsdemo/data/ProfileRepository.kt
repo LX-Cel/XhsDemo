@@ -15,4 +15,18 @@ class ProfileRepository(private val profileDao: ProfileDao) {
             )
         }
     }
+
+    suspend fun updateAvatar(avatarUrl: String) {
+        val current = profileDao.getProfile()
+        if (current != null) {
+            profileDao.updateProfile(current.copy(avatarUrl = avatarUrl))
+        }
+    }
+
+    suspend fun updateName(name: String) {
+        val current = profileDao.getProfile()
+        if (current != null) {
+            profileDao.updateProfile(current.copy(displayName = name))
+        }
+    }
 }

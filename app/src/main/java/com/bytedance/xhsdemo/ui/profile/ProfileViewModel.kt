@@ -33,6 +33,20 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
         }
     }
 
+    fun updateAvatar(uri: String) {
+        viewModelScope.launch {
+            repository.updateAvatar(uri)
+            load() // Reload to update UI
+        }
+    }
+
+    fun updateName(name: String) {
+        viewModelScope.launch {
+            repository.updateName(name)
+            load() // Reload to update UI
+        }
+    }
+
     fun showToast(message: String) {
         viewModelScope.launch { _events.emit(message) }
     }

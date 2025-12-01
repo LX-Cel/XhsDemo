@@ -9,6 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
@@ -42,6 +45,12 @@ class ProfilePageFragment : Fragment() {
         ProfileViewModelFactory(ProfileRepository(db.profileDao()))
     }
 
+    private val pickMedia = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) {
+            viewModel.updateAvatar(uri.toString())
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -65,8 +74,6 @@ class ProfilePageFragment : Fragment() {
         applyInsets()
     }
 
-
-
     private fun setupClicks() {
         binding.btnDrawer.setOnClickListener { (activity as? MainActivity)?.openDrawer() }
         binding.btnShare.setOnClickListener { toast("分享") }
@@ -77,9 +84,28 @@ class ProfilePageFragment : Fragment() {
         binding.quickGroup.setOnClickListener { toast("群聊") }
         binding.btnScan.setOnClickListener { toast("扫一扫") }
 
+        binding.avatarImage.setOnClickListener { pickMedia.launch("image/*") }
+        binding.profileName.setOnClickListener { showEditNameDialog() }
+
         binding.tabNote.setOnClickListener { toast("笔记") }
         binding.tabCollect.setOnClickListener { toast("收藏") }
         binding.tabLiked.setOnClickListener { toast("赞过") }
+    }
+
+    private fun showEditNameDialog() {
+        val editText = EditText(requireContext())
+        editText.setText(binding.profileName.text)
+        AlertDialog.Builder(requireContext())
+            .setTitle("修改昵称")
+            .setView(editText)
+            .setPositiveButton("确定") { _, _ ->
+                val newName = editText.text.toString()
+                if (newName.isNotBlank()) {
+                    viewModel.updateName(newName)
+                }
+            }
+            .setNegativeButton("取消", null)
+            .show()
     }
 
     private fun observeState() {
