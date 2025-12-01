@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -32,7 +32,7 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: PostAdapter
-    private val viewModel: PostListViewModel by viewModels()
+    private val viewModel: PostListViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +48,9 @@ class HomeFragment : Fragment() {
         applyInsets()
         setupActions()
         observeState()
-        viewModel.refresh()
+        if (viewModel.state.value.items.isEmpty()) {
+            viewModel.refresh()
+        }
     }
 
     private fun setupList() {

@@ -23,8 +23,29 @@ import com.google.android.material.navigation.NavigationBarView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.activity.viewModels
+import androidx.activity.result.contract.ActivityResultContracts
+import com.bytedance.xhsdemo.ui.PostListViewModel
+import com.bytedance.xhsdemo.model.Post
 
 class MainActivity : AppCompatActivity() {
+
+    private val homeViewModel: PostListViewModel by viewModels()
+
+    private val publishLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            val post = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                result.data?.getParcelableExtra(PublishActivity.EXTRA_NEW_POST, Post::class.java)
+            } else {
+                @Suppress("DEPRECATION")
+                result.data?.getParcelableExtra(PublishActivity.EXTRA_NEW_POST)
+            }
+            post?.let {
+                homeViewModel.addPost(it)
+                binding.viewPager.currentItem = 0
+            }
+        }
+    }
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var sessionManager: SessionManager
@@ -46,7 +67,6 @@ class MainActivity : AppCompatActivity() {
         setupViewPager()
         setupBottomNav()
         setupDrawer()
-        binding.fabPublish.setOnClickListener { openPublish() }
     }
 
     private fun setupDrawer() {
@@ -105,34 +125,47 @@ class MainActivity : AppCompatActivity() {
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                when (position) {
-                    0 -> binding.bottomNav.selectedItemId = R.id.nav_home
-                    1 -> binding.bottomNav.selectedItemId = R.id.nav_market
-                    2 -> binding.bottomNav.selectedItemId = R.id.nav_message
-                    3 -> binding.bottomNav.selectedItemId = R.id.nav_profile
-                }
+                updateBottomNavState(position)
             }
         })
     }
 
     private fun setupBottomNav() {
-        binding.bottomNav.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_home -> binding.viewPager.currentItem = 0
-                R.id.nav_market -> binding.viewPager.currentItem = 1
-                R.id.nav_message -> binding.viewPager.currentItem = 2
-                R.id.nav_profile -> binding.viewPager.currentItem = 3
-                else -> return@OnItemSelectedListener false
-            }
-            true
-        })
+        binding.btnHome.setOnClickListener { binding.viewPager.currentItem = 0 }
+        binding.btnMarket.setOnClickListener { binding.viewPager.currentItem = 1 }
+        binding.btnPublish.setOnClickListener { openPublish() }
+        binding.btnMessage.setOnClickListener { binding.viewPager.currentItem = 2 }
+        binding.btnMe.setOnClickListener { binding.viewPager.currentItem = 3 }
+    }
+
+    private fun updateBottomNavState(position: Int) {
+        val activeColor = getColor(R.color.black)
+        val inactiveColor = getColor(R.color.xhs_gray)
+        val activeStyle = android.graphics.Typeface.BOLD
+        val inactiveStyle = android.graphics.Typeface.NORMAL
+
+        // Reset all
+        listOf(binding.btnHome, binding.btnMarket, binding.btnMessage, binding.btnMe).forEach {
+            it.setTextColor(inactiveColor)
+            it.typeface = android.graphics.Typeface.defaultFromStyle(inactiveStyle)
+        }
+
+        // Set active
+        val activeView = when (position) {
+            0 -> binding.btnHome
+            1 -> binding.btnMarket
+            2 -> binding.btnMessage
+            3 -> binding.btnMe
+            else -> null
+        }
+        activeView?.setTextColor(activeColor)
+        activeView?.typeface = android.graphics.Typeface.defaultFromStyle(activeStyle)
     }
 
     private fun applyInsets() {
-        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNav) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.drawerLayout) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(v.paddingLeft, v.paddingTop, v.paddingRight, systemBars.bottom)
-            binding.fabPublish.translationY = -systemBars.bottom / 2f
+            binding.bottomNavLayout.setPadding(0, 0, 0, systemBars.bottom)
             insets
         }
 
@@ -146,7 +179,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openPublish() {
-        startActivity(Intent(this, PublishActivity::class.java))
+        publishLauncher.launch(Intent(this, PublishActivity::class.java))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             overrideActivityTransition(
                 OVERRIDE_TRANSITION_OPEN,
@@ -168,8 +201,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun setNavigationEnabled(enabled: Boolean) {
-        binding.bottomNav.isEnabled = enabled
-        binding.fabPublish.isEnabled = enabled
+        binding.bottomNavLayout.isEnabled = enabled
+        binding.btnHome.isEnabled = enabled
+        binding.btnMarket.isEnabled = enabled
+        binding.btnPublish.isEnabled = enabled
+        binding.btnMessage.isEnabled = enabled
+        binding.btnMe.isEnabled = enabled
     }
 
     fun resetDrawerState() {

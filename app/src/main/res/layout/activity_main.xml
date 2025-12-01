@@ -17,37 +17,79 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottomNav"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNav"
-        android:layout_width="0dp"
-        android:layout_height="64dp"
+    <LinearLayout
+        android:id="@+id/bottomNavLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:background="@color/white"
-        app:labelVisibilityMode="labeled"
-        app:itemIconTint="@android:color/transparent"
-        app:itemTextColor="@color/black"
-        app:itemTextAppearanceActive="@style/NavTextActive"
-        app:itemTextAppearanceInactive="@style/NavTextInactive"
-        app:menu="@menu/menu_bottom_nav"
+        android:gravity="center_vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabPublish"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        android:contentDescription="@string/action_publish"
-        app:backgroundTint="@color/xhs_red"
-        app:elevation="6dp"
-        app:layout_constraintTop_toTopOf="@id/bottomNav"
-        app:layout_constraintBottom_toBottomOf="@id/bottomNav"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/ic_add" />
+        <TextView
+            android:id="@+id/btnHome"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="首页"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/btnMarket"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="市集"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/xhs_gray"/>
+
+        <FrameLayout
+            android:id="@+id/btnPublish"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1">
+
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_publish_btn"
+                android:src="@drawable/ic_add"
+                android:padding="6dp"
+                android:contentDescription="@string/action_publish"/>
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/btnMessage"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="消息"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/xhs_gray"/>
+
+        <TextView
+            android:id="@+id/btnMe"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:text="我"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textColor="@color/xhs_gray"/>
+
+    </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

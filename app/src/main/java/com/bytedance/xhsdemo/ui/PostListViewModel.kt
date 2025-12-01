@@ -52,6 +52,12 @@ class PostListViewModel : ViewModel() {
         loadPage(1, true)
     }
 
+    fun addPost(post: Post) {
+        _state.update {
+            it.copy(items = listOf(post) + it.items)
+        }
+    }
+
     fun loadMore() {
         val current = _state.value
         // 触底加载：已有请求或无更多时直接返回
