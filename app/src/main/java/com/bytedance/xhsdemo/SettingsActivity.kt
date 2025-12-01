@@ -6,8 +6,12 @@ import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import com.bytedance.xhsdemo.data.SessionManager
 import com.bytedance.xhsdemo.databinding.ActivitySettingsBinding
+import com.bytedance.xhsdemo.databinding.ItemSettingsRowBinding
 import com.bytedance.xhsdemo.utils.ToastUtils
 
 class SettingsActivity : AppCompatActivity() {
@@ -19,20 +23,61 @@ class SettingsActivity : AppCompatActivity() {
         sessionManager = SessionManager(this)
         AppCompatDelegate.setDefaultNightMode(sessionManager.getThemeMode())
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.switchTheme.isChecked =
-            sessionManager.getThemeMode() == AppCompatDelegate.MODE_NIGHT_YES
-        binding.switchTheme.setOnCheckedChangeListener { _, checked ->
-            val mode =
-                if (checked) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
-            sessionManager.setThemeMode(mode)
-            AppCompatDelegate.setDefaultNightMode(mode)
-        }
+        applyInsets()
+        setupViews()
 
+        binding.btnBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
         binding.btnLogout.setOnClickListener { logoutAndBack() }
         binding.btnSwitchAccount.setOnClickListener { logoutAndBack() }
+    }
+
+    private fun applyInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.statusBarSpace) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.layoutParams.height = systemBars.top
+            v.requestLayout()
+            insets
+        }
+    }
+
+    private fun setupViews() {
+        // Group 1
+        setupItem(binding.itemAccount, R.drawable.ic_settings_account, "账号与安全")
+        setupItem(binding.itemGeneral, R.drawable.ic_settings, "通用设置")
+        setupItem(binding.itemNotification, R.drawable.ic_settings_notification, "通知设置")
+        setupItem(binding.itemPrivacy, R.drawable.ic_settings_privacy, "隐私设置")
+
+        // Group 2
+        setupItem(binding.itemStorage, R.drawable.ic_settings_storage, "存储空间", "2.17 GB")
+        setupItem(binding.itemContent, R.drawable.ic_settings_content, "内容偏好调节")
+        setupItem(binding.itemAddress, R.drawable.ic_settings_location, "收货地址")
+        setupItem(binding.itemWidget, R.drawable.ic_settings_widget, "添加小组件")
+        setupItem(binding.itemMinor, R.drawable.ic_settings_minor, "未成年人模式", "未开启")
+
+        // Group 3
+        setupItem(binding.itemLab, R.drawable.ic_settings_lab, "新功能体验")
+
+        // Group 4
+        setupItem(binding.itemHelp, R.drawable.ic_headset, "帮助与客服")
+        setupItem(binding.itemAbout, R.drawable.ic_settings_about, "关于小红书")
+    }
+
+    private fun setupItem(
+        itemBinding: ItemSettingsRowBinding,
+        iconRes: Int,
+        title: String,
+        value: String? = null
+    ) {
+        itemBinding.itemIcon.setImageResource(iconRes)
+        itemBinding.itemTitle.text = title
+        itemBinding.itemValue.text = value ?: ""
+        itemBinding.root.setOnClickListener {
+            ToastUtils.show(this, title)
+        }
     }
 
     private fun logoutAndBack() {
