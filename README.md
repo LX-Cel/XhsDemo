@@ -63,22 +63,22 @@ app/
 ## 演示
 
 ### 登录界面
-![登录界面](E:\AndroidStudioProjects\demo\登录界面.png)
+![登录界面](imgs/登录界面.png)
 
 ### 首页样式
-![首页](E:\AndroidStudioProjects\demo\首页.png)
+![首页](imgs/首页.png)
 
 ### 天气页面样式
-![天气页面](E:\AndroidStudioProjects\demo\天气页.png)
+![天气页面](imgs/天气页.png)
 
 ### 个人中心页面样式
-![个人中心页面](E:\AndroidStudioProjects\demo\个人中心页.png)
+![个人中心页面](imgs/个人中心页.png)
 
 ### 侧边栏样式
-![侧边栏](E:\AndroidStudioProjects\demo\侧边栏.png)
+![侧边栏](imgs/侧边栏.png)
 
 ### 设置界面
-![设置界面](E:\AndroidStudioProjects\demo\设置界面.png)
+![设置界面](imgs/设置界面.png)
 
 
 
