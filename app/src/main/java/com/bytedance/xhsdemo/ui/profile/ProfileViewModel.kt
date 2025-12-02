@@ -13,11 +13,13 @@ import kotlinx.coroutines.launch
 
 import kotlinx.coroutines.flow.update
 
+// 个人资料 UI 状态：记录当前资料数据以及加载中状态
 data class ProfileUiState(
     val profile: UserProfileEntity? = null,
     val isLoading: Boolean = false
 )
 
+// 个人主页 ViewModel：维护个人资料数据，封装更新逻辑
 class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() {
 
     private val _state = MutableStateFlow(ProfileUiState())
@@ -26,6 +28,7 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
     private val _events = MutableSharedFlow<String>()
     val events = _events.asSharedFlow()
 
+    // 加载当前个人资料
     fun load() {
         viewModelScope.launch {
             _state.update { it.copy(isLoading = true) }
@@ -34,6 +37,7 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
         }
     }
 
+    // 更新头像后重新加载资料以刷新 UI
     fun updateAvatar(uri: String) {
         viewModelScope.launch {
             repository.updateAvatar(uri)
@@ -41,6 +45,7 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
         }
     }
 
+    // 更新昵称后重新加载资料以刷新 UI
     fun updateName(name: String) {
         viewModelScope.launch {
             repository.updateName(name)
@@ -48,11 +53,13 @@ class ProfileViewModel(private val repository: ProfileRepository) : ViewModel() 
         }
     }
 
+    // 发送一次性 Toast 事件
     fun showToast(message: String) {
         viewModelScope.launch { _events.emit(message) }
     }
 }
 
+// 个人资料 ViewModel 工厂：用于注入 ProfileRepository
 class ProfileViewModelFactory(private val repository: ProfileRepository) :
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")

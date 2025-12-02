@@ -17,6 +17,7 @@ import com.bytedance.xhsdemo.databinding.ItemCommentBinding
 import com.bytedance.xhsdemo.model.Post
 import com.bytedance.xhsdemo.utils.ToastUtils
 
+// 笔记详情页：展示封面、内容、作者信息以及评论列表
 class PostDetailActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPostDetailBinding
@@ -27,6 +28,7 @@ class PostDetailActivity : AppCompatActivity() {
         binding = ActivityPostDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 让顶部工具栏根据状态栏高度增加内边距，支持沉浸式
         ViewCompat.setOnApplyWindowInsetsListener(binding.detailToolbar) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(v.paddingLeft, systemBars.top, v.paddingRight, v.paddingBottom)
@@ -37,6 +39,7 @@ class PostDetailActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
+        // 兼容不同 Android 版本的 Parcelable 读取方式
         val post = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(EXTRA_POST, Post::class.java)
         } else {
@@ -44,6 +47,7 @@ class PostDetailActivity : AppCompatActivity() {
             intent.getParcelableExtra<Post>(EXTRA_POST)
         }
         if (post == null) {
+            // 没有收到笔记数据，直接关闭页面避免空白
             finish()
             return
         }
@@ -51,6 +55,7 @@ class PostDetailActivity : AppCompatActivity() {
         bindPost(post)
     }
 
+    // 将 Post 对象内容渲染到 UI，并根据评论情况动态填充评论区
     private fun bindPost(post: Post) {
         binding.detailCover.load(post.imageUrl) {
             crossfade(true)
@@ -66,6 +71,7 @@ class PostDetailActivity : AppCompatActivity() {
             placeholder(R.drawable.bg_avatar_placeholder)
             error(R.drawable.bg_avatar_placeholder)
         }
+        // 先清空旧的评论 View
         binding.commentContainer.removeAllViews()
         if (post.comments.isEmpty()) {
             val tv = TextView(this).apply {
@@ -94,6 +100,7 @@ class PostDetailActivity : AppCompatActivity() {
         const val EXTRA_POST = "extra_post"
     }
 
+    // 关闭详情页时使用与其他页面一致的转场动画
     override fun finish() {
         super.finish()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -104,6 +111,7 @@ class PostDetailActivity : AppCompatActivity() {
         }
     }
 
+    // 捕获触摸事件，按下时取消当前 Toast
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
             ToastUtils.cancel()

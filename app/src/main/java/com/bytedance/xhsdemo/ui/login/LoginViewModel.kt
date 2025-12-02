@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+// 登录页 UI 状态：记录输入内容、加载状态以及错误信息
 data class LoginUiState(
     val phone: String = "",
     val password: String = "",
@@ -21,36 +22,45 @@ data class LoginUiState(
     val error: String? = null
 )
 
+// 登录业务 ViewModel：处理输入校验、调用仓库登录以及 UI 状态更新
 class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
 
+    // 登录页面的 UI 状态
     private val _state = MutableStateFlow(LoginUiState())
     val state = _state.asStateFlow()
 
+    // 用于向 Activity 发送一次性消息（如 Toast 提示）
     private val _events = MutableSharedFlow<String>()
     val events = _events.asSharedFlow()
 
     init {
+        // 确保本地存在一个默认账号，方便本地开发体验
         viewModelScope.launch {
             repository.ensureDefaultUser()
         }
     }
 
+    // 手机号输入变化
     fun onPhoneChanged(phone: String) {
         _state.update { it.copy(phone = phone, error = null) }
     }
 
+    // 密码输入变化
     fun onPasswordChanged(password: String) {
         _state.update { it.copy(password = password, error = null) }
     }
 
+    // 勾选协议状态变化
     fun onAgreementChecked(checked: Boolean) {
         _state.update { it.copy(agreementChecked = checked, error = null) }
     }
 
+    // 切换密码可见性
     fun togglePasswordVisibility() {
         _state.update { it.copy(isPasswordVisible = !it.isPasswordVisible) }
     }
 
+    // 提交登录：包含前端输入校验和调用仓库登录
     fun submitLogin() {
         val current = _state.value
         if (current.phone.isBlank() || current.password.isBlank()) {
@@ -75,11 +85,13 @@ class LoginViewModel(private val repository: LoginRepository) : ViewModel() {
         }
     }
 
+    // 发送 Toast 事件，供页面订阅后展示
     private fun emitToast(msg: String) {
         viewModelScope.launch { _events.emit(msg) }
     }
 }
 
+// 自定义 ViewModel 工厂：用于向 LoginViewModel 注入 LoginRepository
 class LoginViewModelFactory(private val repository: LoginRepository) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

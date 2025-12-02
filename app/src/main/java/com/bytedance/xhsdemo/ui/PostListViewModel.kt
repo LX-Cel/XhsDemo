@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+// 列表 UI 状态：描述当前笔记流的展示数据和加载状态
 data class PostListState(
     val items: List<Post> = emptyList(),
     val isRefreshing: Boolean = false,
@@ -23,22 +24,27 @@ data class PostListState(
     val page: Int = 1
 )
 
+// 一次性事件（单向通知 UI，例如 Toast 提示）
 sealed class PostListEvent {
     data class ToastMessage(val message: String) : PostListEvent()
 }
 
+// 首页笔记列表的 ViewModel：负责分页加载、刷新和错误处理
 class PostListViewModel : ViewModel() {
 
+    // UI 状态 StateFlow，Fragment 通过 collect 渲染界面
     private val _state = MutableStateFlow(PostListState())
     val state = _state.asStateFlow()
 
+    // 事件 SharedFlow，用于发送一次性事件（如 Toast）
     private val _events = MutableSharedFlow<PostListEvent>()
     val events = _events.asSharedFlow()
 
+    // 是否正在加载，防止短时间内重复触发请求
     private var loading = false
 
+    // 下拉刷新入口：重置数据源和分页信息，从第一页重新请求
     fun refresh() {
-        // 下拉刷新入口：重置页码并清空错误/底部状态，刷新一批新笔记
         if (loading) return
         loading = true
         FakePostRepository.refreshData()
@@ -55,12 +61,14 @@ class PostListViewModel : ViewModel() {
         loadPage(1, true)
     }
 
+    // 在列表顶部插入一条新发布的笔记
     fun addPost(post: Post) {
         _state.update {
             it.copy(items = listOf(post) + it.items)
         }
     }
 
+    // 滑动到底部触发的「加载更多」逻辑
     fun loadMore() {
         val current = _state.value
         if (loading || !current.hasMore) return
@@ -69,6 +77,7 @@ class PostListViewModel : ViewModel() {
         loadPage(current.page, false)
     }
 
+    // 通用的分页加载逻辑，FakePostRepository 通过回调返回结果
     private fun loadPage(page: Int, isRefresh: Boolean) {
         FakePostRepository.fetchPosts(page, PAGE_SIZE) { result ->
             viewModelScope.launch {
@@ -79,6 +88,7 @@ class PostListViewModel : ViewModel() {
         }
     }
 
+    // 成功返回数据后，根据是刷新还是加载更多，合并到现有列表中
     private fun renderPage(page: PageResult, isRefresh: Boolean, currentPage: Int) {
         val merged = if (isRefresh) {
             page.items
@@ -103,6 +113,7 @@ class PostListViewModel : ViewModel() {
         }
     }
 
+    // 统一错误处理：刷新失败直接展示错误视图，加载更多失败则在底部展示错误并弹 Toast
     private suspend fun handleError(error: Throwable, isRefresh: Boolean) {
         if (isRefresh) {
             _state.update {

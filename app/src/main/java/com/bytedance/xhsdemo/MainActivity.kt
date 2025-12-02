@@ -31,10 +31,13 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.bytedance.xhsdemo.ui.PostListViewModel
 import com.bytedance.xhsdemo.model.Post
 
+// 应用主界面：负责底部导航 + ViewPager + 侧边抽屉整体框架
 class MainActivity : AppCompatActivity() {
 
+    // 和首页共享的帖子列表 ViewModel，用于接收发布页返回的新帖子
     private val homeViewModel: PostListViewModel by viewModels()
 
+    // 发布页面返回结果的注册器：用于接收新发布的 Post
     private val publishLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == RESULT_OK) {
             val post = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -50,14 +53,18 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // ViewBinding 引用，用于访问布局中的 View
     private lateinit var binding: ActivityMainBinding
+    // 会话管理：保存登录状态、主题模式等
     private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 先根据本地配置设置主题模式，避免 Activity 闪烁
         sessionManager = SessionManager(this)
         AppCompatDelegate.setDefaultNightMode(sessionManager.getThemeMode())
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        // 未登录时直接跳转登录页，拦截后续 UI 初始化
         if (!sessionManager.isLoggedIn()) {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
@@ -66,12 +73,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 统一处理状态栏/导航栏 Insets，保证沉浸式效果
         applyInsets()
+        // 初始化首页四个 Tab 的 ViewPager
         setupViewPager()
+        // 初始化底部导航点击事件
         setupBottomNav()
+        // 初始化侧边抽屉菜单
         setupDrawer()
     }
 
+    // 初始化侧边抽屉逻辑：包括遮罩颜色和打开/关闭时对底部导航的禁用
     private fun setupDrawer() {
         binding.drawerLayout.setScrimColor(Color.TRANSPARENT)
         binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
@@ -84,11 +96,13 @@ class MainActivity : AppCompatActivity() {
             }
         })
 
+        // drawerMenu 是侧边栏内容区域，统一在这里绑定点击事件
         with(binding.drawerMenu) {
             itemSetting.setOnClickListener {
                 startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
                 binding.drawerLayout.closeDrawer(GravityCompat.START)
             }
+            // 公共点击监听：从 View 中提取文案并以 Toast 方式提示
             val toastListener = View.OnClickListener { v ->
                 val text = when (v) {
                     is android.widget.TextView -> v.text
@@ -123,10 +137,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // 供首页标题栏按钮调用，打开左侧抽屉
     fun openDrawer() {
         binding.drawerLayout.openDrawer(GravityCompat.START)
     }
 
+    // 初始化 ViewPager2，承载首页、天气、消息占位页、个人中心四个 Fragment
     private fun setupViewPager() {
         binding.viewPager.adapter = MainPagerAdapter(
             this,
@@ -137,6 +153,7 @@ class MainActivity : AppCompatActivity() {
                 ProfilePageFragment()
             )
         )
+        // 禁用左右滑动切换，统一由底部导航控制
         binding.viewPager.isUserInputEnabled = false
         binding.viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -146,6 +163,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    // 底部导航按钮点击事件，将 ViewPager 切换到对应页面
     private fun setupBottomNav() {
         binding.btnHome.setOnClickListener { binding.viewPager.currentItem = 0 }
         binding.btnMarket.setOnClickListener { binding.viewPager.currentItem = 1 }
@@ -154,6 +172,7 @@ class MainActivity : AppCompatActivity() {
         binding.btnMe.setOnClickListener { binding.viewPager.currentItem = 3 }
     }
 
+    // 根据当前选中的页面高亮对应底部导航文案
     private fun updateBottomNavState(position: Int) {
         val activeColor = getColor(R.color.black)
         val inactiveColor = getColor(R.color.xhs_gray)
@@ -178,6 +197,7 @@ class MainActivity : AppCompatActivity() {
         activeView?.typeface = android.graphics.Typeface.defaultFromStyle(activeStyle)
     }
 
+    // 处理系统状态栏/导航栏 Insets，把底部安全区域和抽屉状态栏占位补齐
     private fun applyInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.drawerLayout) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -194,6 +214,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // 打开发布页面，并根据系统版本使用合适的转场动画
     private fun openPublish() {
         publishLauncher.launch(Intent(this, PublishActivity::class.java))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -208,6 +229,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // 主界面 ViewPager 的 Fragment 适配器
     private class MainPagerAdapter(
         activity: FragmentActivity,
         private val fragments: List<Fragment>
@@ -216,6 +238,7 @@ class MainActivity : AppCompatActivity() {
         override fun createFragment(position: Int): Fragment = fragments[position]
     }
 
+    // 控制底部导航区域是否可交互（在抽屉打开时禁用）
     fun setNavigationEnabled(enabled: Boolean) {
         binding.bottomNavLayout.isEnabled = enabled
         binding.btnHome.isEnabled = enabled
@@ -225,12 +248,14 @@ class MainActivity : AppCompatActivity() {
         binding.btnMe.isEnabled = enabled
     }
 
+    // 供外部在特殊场景下重置抽屉状态（解锁并关闭）
     fun resetDrawerState() {
         binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         binding.drawerLayout.closeDrawer(GravityCompat.START, false)
         setNavigationEnabled(true)
     }
 
+    // 统一处理点击事件：按下任意位置时，取消全局 Toast，避免长时间悬浮
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
             ToastUtils.cancel()

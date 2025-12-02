@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
+// 用户表 Dao：提供基本的插入和按手机号查询
 @Dao
 interface UserDao {
 

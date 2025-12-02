@@ -14,12 +14,15 @@ import com.bytedance.xhsdemo.databinding.ActivitySettingsBinding
 import com.bytedance.xhsdemo.databinding.ItemSettingsRowBinding
 import com.bytedance.xhsdemo.utils.ToastUtils
 
+// 设置页：集中展示账号、通知、隐私等入口，并提供退出登录能力
 class SettingsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySettingsBinding
+    // 复用会话管理，支持在设置页更新登录状态
     private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        // 应用当前主题模式
         sessionManager = SessionManager(this)
         AppCompatDelegate.setDefaultNightMode(sessionManager.getThemeMode())
         super.onCreate(savedInstanceState)
@@ -27,6 +30,7 @@ class SettingsActivity : AppCompatActivity() {
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 适配状态栏高度并初始化各个设置项
         applyInsets()
         setupViews()
 
@@ -35,6 +39,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.btnSwitchAccount.setOnClickListener { logoutAndBack() }
     }
 
+    // 为顶部状态栏占位 View 设置高度
     private fun applyInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.statusBarSpace) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -44,6 +49,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    // 填充设置列表的每一行文案、图标以及点击行为
     private fun setupViews() {
         // Group 1
         setupItem(binding.itemAccount, R.drawable.ic_settings_account, "账号与安全")
@@ -66,6 +72,7 @@ class SettingsActivity : AppCompatActivity() {
         setupItem(binding.itemAbout, R.drawable.ic_settings_about, "关于小红书")
     }
 
+    // 统一初始化单行设置项：设置图标、标题、副标题，并在点击时弹出 Toast
     private fun setupItem(
         itemBinding: ItemSettingsRowBinding,
         iconRes: Int,
@@ -80,6 +87,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    // 退出当前账号，并跳转回登录页，清空任务栈
     private fun logoutAndBack() {
         sessionManager.setLoggedIn(false)
         val intent = Intent(this, LoginActivity::class.java)
@@ -98,6 +106,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
+    // 捕获触摸事件以在按下时取消当前 Toast
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
             ToastUtils.cancel()

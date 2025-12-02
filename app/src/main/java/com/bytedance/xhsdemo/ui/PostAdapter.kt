@@ -11,16 +11,21 @@ import com.bytedance.xhsdemo.databinding.ItemFeedFooterBinding
 import com.bytedance.xhsdemo.databinding.ItemPostBinding
 import com.bytedance.xhsdemo.model.Post
 
+// 列表底部区域状态：隐藏 / 加载中 / 失败 / 没有更多
 enum class FooterState { HIDDEN, LOADING, ERROR, NO_MORE }
 
+// 首页瀑布流的 Adapter，支持普通内容项 + 底部状态 Footer
 class PostAdapter(
     private val onItemClick: (Post) -> Unit,
     private val onRetryClick: () -> Unit
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    // 当前展示的帖子列表数据
     private val posts = mutableListOf<Post>()
+    // 列表底部 Footer 当前状态
     private var footerState: FooterState = FooterState.HIDDEN
 
+    // 便于外部读取当前数据量
     val dataSize: Int
         get() = posts.size
 
@@ -49,12 +54,14 @@ class PostAdapter(
         }
     }
 
+    // 提交新的整批数据，通常用于下拉刷新
     fun submitList(newItems: MutableList<Post>) {
         posts.clear()
         posts.addAll(newItems)
         notifyDataSetChanged()
     }
 
+    // 在列表尾部补充一批数据，通常用于分页加载
     fun append(items: List<Post>) {
         if (items.isEmpty()) return
         val start = posts.size
@@ -62,11 +69,13 @@ class PostAdapter(
         notifyItemRangeInserted(start, items.size)
     }
 
+    // 在列表头部插入一条数据，适合新发布的内容
     fun prepend(item: Post) {
         posts.add(0, item)
         notifyItemInserted(0)
     }
 
+    // 更新底部 Footer 状态，并计算是否需要插入/删除 Footer 项
     fun setFooterState(state: FooterState) {
         val hadFooter = footerState != FooterState.HIDDEN
         footerState = state
@@ -78,6 +87,7 @@ class PostAdapter(
         }
     }
 
+    // 普通帖子 ViewHolder，负责渲染封面图、头像和文案
     private class PostViewHolder(private val binding: ItemPostBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -99,6 +109,7 @@ class PostAdapter(
         }
     }
 
+    // 底部 Footer ViewHolder，根据 FooterState 渲染加载/重试/没有更多文案
     private class FooterViewHolder(
         private val binding: ItemFeedFooterBinding,
         onRetryClick: () -> Unit

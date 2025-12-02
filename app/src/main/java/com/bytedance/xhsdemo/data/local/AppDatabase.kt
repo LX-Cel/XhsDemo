@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+// Room 数据库入口：维护用户和用户资料两张表
 @Database(
     entities = [UserEntity::class, UserProfileEntity::class],
     version = 2,
@@ -24,6 +25,7 @@ abstract class AppDatabase : RoomDatabase() {
         private var INSTANCE: AppDatabase? = null
         private val seedScope = CoroutineScope(Dispatchers.IO)
 
+        // 懒加载单例获取数据库实例
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
@@ -31,7 +33,9 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "xhs-demo.db"
                 )
+                    // 简化迁移策略：版本不兼容时直接重建
                     .fallbackToDestructiveMigration()
+                    // 在数据库首次创建时插入默认用户和默认资料
                     .addCallback(object : Callback() {
                         override fun onCreate(db: SupportSQLiteDatabase) {
                             super.onCreate(db)

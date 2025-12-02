@@ -8,16 +8,21 @@ import java.util.UUID
 import kotlin.math.min
 import kotlin.random.Random
 
+// 分页结果数据结构：包含当前页数据以及是否还有更多
 data class PageResult(val items: List<Post>, val hasMore: Boolean)
 
+// 模拟的帖子仓库：本地生成假数据，模拟网络分页加载和失败场景
 object FakePostRepository {
 
+    // 主线程 Handler，用于模拟网络延迟后在主线程回调
     private val mainHandler = Handler(Looper.getMainLooper())
     private val random = Random(System.currentTimeMillis())
 
+    // 初次生成的数据量以及理论上的最大数量
     private const val INITIAL_COUNT = 20
     private const val TOTAL_COUNT = 100
 
+    // 一组示例封面图片 URL
     private val photos = listOf(
         "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=80",
         "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
@@ -29,6 +34,7 @@ object FakePostRepository {
         "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=1200&q=80",
         "https://images.unsplash.com/photo-1492724441997-5dc865305da7?auto=format&fit=crop&w=1200&q=80"
     )
+    // 一组示例用户头像 URL
     private val avatars = listOf(
         "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=60",
         "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=60",
@@ -36,6 +42,7 @@ object FakePostRepository {
         "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=60",
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=60"
     )
+    // 随机标题文案，用于模拟不同类型的笔记
     private val titles = listOf(
         "周末去海边度假，一起看最美的晚霞",
         "家里的小阳台也能拍出杂志感",
@@ -47,19 +54,24 @@ object FakePostRepository {
         "和朋友的周末小聚，记录下这些笑脸"
     )
 
+    // 内存中的全部帖子数据源
     private val posts = mutableListOf<Post>()
 
     init {
+        // 启动时预生成一批假数据
         generatePosts(INITIAL_COUNT)
     }
 
+    // 模拟网络分页请求：延迟一段时间后随机返回成功或失败
     fun fetchPosts(page: Int, pageSize: Int, callback: (Result<PageResult>) -> Unit) {
         mainHandler.postDelayed({
+            // 模拟网络错误：从第二页开始有一定概率失败
             val shouldFail = page > 1 && random.nextFloat() < 0.15f
             if (shouldFail) {
                 callback(Result.failure(IllegalStateException("网络开小差了，重试试试看")))
                 return@postDelayed
             }
+            // 确保当前数据源数量足够覆盖本次请求的区间
             ensureSize(min(page * pageSize + 4, TOTAL_COUNT))
             val start = (page - 1) * pageSize
             val end = min(posts.size, start + pageSize)
@@ -73,27 +85,33 @@ object FakePostRepository {
         }, 520)
     }
 
+    // 在内存中新增一条帖子，统一把发布时间改为「刚刚」
     fun addPost(post: Post) {
         posts.add(0, post.copy(publishTime = "刚刚"))
     }
 
+    // 根据 id 查找帖子详情（用于详情页）
     fun findPost(id: String): Post? = posts.firstOrNull { it.id == id }
 
+    // 重新生成数据，相当于下拉刷新后重置数据源
     fun refreshData() {
         posts.clear()
         generatePosts(INITIAL_COUNT)
     }
 
+    // 保证数据源长度至少为 target
     private fun ensureSize(target: Int) {
         if (posts.size < target) {
             generatePosts(target - posts.size)
         }
     }
 
+    // 批量生成指定数量的随机帖子
     private fun generatePosts(count: Int) {
         repeat(count) { posts.add(randomPost()) }
     }
 
+    // 构造一条随机 Post 数据
     private fun randomPost(): Post {
         val title = titles.random(random)
         val cover = photos.random(random)
@@ -114,6 +132,7 @@ object FakePostRepository {
         )
     }
 
+    // 随机生成 1~3 条评论
     private fun randomComments(): List<Comment> {
         val sample = listOf(
             "好会生活，想去同款地点！",

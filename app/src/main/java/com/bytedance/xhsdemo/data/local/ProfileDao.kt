@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 
+// 用户资料表 Dao：读取和更新个人主页信息
 @Dao
 interface ProfileDao {
 

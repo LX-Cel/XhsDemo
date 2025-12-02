@@ -15,15 +15,19 @@ import com.bytedance.xhsdemo.model.Post
 import com.bytedance.xhsdemo.utils.ToastUtils
 import java.util.UUID
 
+// 发布笔记页面：支持选择本地图片和输入标题内容，结果回传给首页
 class PublishActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPublishBinding
+    // 用户选择的图片 Uri，可能为空
     private var selectedUri: Uri? = null
 
+    // 选择本地图片的 ActivityResultLauncher
     private val pickImage =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             selectedUri = uri
             if (uri != null) {
+                // 申请持久化读权限，并预览图片
                 grantReadPersistPermission(uri)
                 // 选取本地图片后立即预览
                 binding.previewImage.load(uri) {
@@ -39,13 +43,16 @@ class PublishActivity : AppCompatActivity() {
         binding = ActivityPublishBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // 处理状态栏 Insets
         applyInsets()
         binding.navBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
+        // 选择图片和发布按钮
         binding.btnPickImage.setOnClickListener { pickImage.launch("image/*") }
         binding.btnPublish.setOnClickListener { publishPost() }
     }
 
+    // 组装一条新的 Post，并通过 setResult 回传给调用方
     private fun publishPost() {
         val title = binding.inputTitle.text?.toString()?.trim().orEmpty()
         val content = binding.inputContent.text?.toString()?.trim().orEmpty()
@@ -72,6 +79,7 @@ class PublishActivity : AppCompatActivity() {
         finish()
     }
 
+    // 关闭页面时统一使用自定义转场动画
     override fun finish() {
         super.finish()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -90,6 +98,7 @@ class PublishActivity : AppCompatActivity() {
             "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=60"
     }
 
+    // 根据状态栏高度调整顶部占位 View
     private fun applyInsets() {
         ViewCompat.setOnApplyWindowInsetsListener(binding.statusBarSpace) { v, insets ->
             val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
@@ -99,6 +108,7 @@ class PublishActivity : AppCompatActivity() {
         }
     }
 
+    // 尝试申请持久化读取 Uri 权限，避免下次访问失败
     private fun grantReadPersistPermission(uri: Uri) {
         try {
             contentResolver.takePersistableUriPermission(
@@ -110,6 +120,7 @@ class PublishActivity : AppCompatActivity() {
         }
     }
 
+    // 捕获点击事件；按下时取消当前 Toast
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (ev?.action == MotionEvent.ACTION_DOWN) {
             ToastUtils.cancel()

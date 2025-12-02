@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.bytedance.xhsdemo.databinding.FragmentPlaceholderBinding
 
+// 占位 Fragment：用于尚未实现的页面，展示简单提示文案
 class PlaceholderFragment : Fragment() {
 
     private var _binding: FragmentPlaceholderBinding? = null
@@ -40,6 +41,7 @@ class PlaceholderFragment : Fragment() {
 
     companion object {
         private const val ARG_TEXT = "arg_text"
+        // 工厂方法，便于外部传入占位文案
         fun newInstance(text: String): PlaceholderFragment {
             val fragment = PlaceholderFragment()
             fragment.arguments = Bundle().apply { putString(ARG_TEXT, text) }

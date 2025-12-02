@@ -2,6 +2,7 @@ package com.bytedance.xhsdemo.ui.weather
 
 import com.google.gson.annotations.SerializedName
 
+// 高德天气返回的整体响应结构
 data class WeatherResponse(
     val status: String,
     val count: String,
@@ -10,6 +11,7 @@ data class WeatherResponse(
     val lives: List<WeatherLive>?
 )
 
+// 单条城市天气实况数据
 data class WeatherLive(
     val province: String,
     val city: String,
