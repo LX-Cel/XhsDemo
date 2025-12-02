@@ -5,11 +5,12 @@ import android.os.Build
 import android.os.Bundle
 import android.text.method.PasswordTransformationMethod
 import android.view.MotionEvent
-import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.isVisible
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -44,6 +45,7 @@ class LoginActivity : AppCompatActivity() {
         }
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        applyInsets()
 
         setupViews()
         observeState()
@@ -98,7 +100,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun renderState(state: LoginUiState) {
         binding.btnLogin.isEnabled =
-            state.phone.isNotBlank() && state.password.isNotBlank() && state.agreementChecked && !state.isLoading
+            state.phone.isNotBlank() && state.password.isNotBlank() && !state.isLoading
         binding.btnLogin.text =
             if (state.isLoading) getString(R.string.login_loading) else getString(R.string.login_button)
         binding.errorText.text = state.error ?: ""
@@ -133,6 +135,16 @@ class LoginActivity : AppCompatActivity() {
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left)
         }
         finish()
+    }
+
+    private fun applyInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
+            val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            binding.statusBarSpacer.layoutParams.height = top
+            binding.statusBarSpacer.requestLayout()
+            insets
+        }
+        ViewCompat.requestApplyInsets(binding.root)
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {

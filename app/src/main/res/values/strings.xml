@@ -1,3 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Xhs Demo</string>
     <string name="feed_title">灵感广场</string>
@@ -6,7 +7,7 @@
     <string name="action_retry">重试</string>
     <string name="action_publish">发布</string>
     <string name="detail_title">笔记详情</string>
-    <string name="comments_title">评论区</string>
+    <string name="comments_title">评论</string>
     <string name="publish_title">发布笔记</string>
     <string name="publish_choose_image">选择相册图片</string>
     <string name="publish_input_title_hint">添加一个吸引人的标题</string>
@@ -14,7 +15,7 @@
     <string name="publish_submit">立即发布</string>
     <string name="loading_more">正在加载更多...</string>
     <string name="load_error">加载失败，点我重试</string>
-    <string name="load_no_more">已经到底啦</string>
+    <string name="load_no_more">已经到底了</string>
     <string name="no_comment">暂无评论，快来留下第一个吧</string>
     <string name="publish_need_content">写点内容或选择一张图吧～</string>
 
@@ -26,7 +27,7 @@
     <string name="login_help_tip">如需帮助，请联系客服</string>
     <string name="login_hint_phone">请输入手机号</string>
     <string name="login_hint_password">请输入密码</string>
-    <string name="login_switch_verify">⇌ 验证码登录</string>
+    <string name="login_switch_verify">验证码登录</string>
     <string name="login_forget_password">忘记密码？</string>
     <string name="login_forget_password_tip">请通过忘记密码功能找回</string>
     <string name="login_button">登录</string>
