@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <View
+        android:id="@+id/statusBarSpace"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/publishToolbar"
         android:layout_width="0dp"
@@ -14,7 +22,7 @@
         android:orientation="horizontal"
         android:paddingStart="@dimen/spacing_12"
         android:paddingEnd="@dimen/spacing_12"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/statusBarSpace"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 

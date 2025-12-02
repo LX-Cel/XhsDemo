@@ -8,6 +8,8 @@ import android.view.MotionEvent
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import coil.load
 import com.bytedance.xhsdemo.databinding.ActivityPublishBinding
 import com.bytedance.xhsdemo.model.Post
@@ -37,6 +39,7 @@ class PublishActivity : AppCompatActivity() {
         binding = ActivityPublishBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        applyInsets()
         binding.navBack.setOnClickListener { onBackPressedDispatcher.onBackPressed() }
 
         binding.btnPickImage.setOnClickListener { pickImage.launch("image/*") }
@@ -85,6 +88,15 @@ class PublishActivity : AppCompatActivity() {
             "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80"
         private const val DEFAULT_AVATAR =
             "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=60"
+    }
+
+    private fun applyInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.statusBarSpace) { v, insets ->
+            val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            v.layoutParams.height = top
+            v.requestLayout()
+            insets
+        }
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {

@@ -90,5 +90,14 @@ app/
   </tr>
 </table>
 
+<table>
+  <tr>
+    <td><img src="./imgs/笔记发布界面.png" width="300px"></td>
+  </tr>
+  <tr>
+    <td align="center">笔记发布界面</td>
+  </tr>
+</table>
+
 
 
