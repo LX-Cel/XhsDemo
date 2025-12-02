@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 data class PostListState(
     val items: List<Post> = emptyList(),
     val isRefreshing: Boolean = false,
+    val isInitialLoading: Boolean = false,
     val footerState: FooterState = FooterState.HIDDEN,
     val showError: Boolean = false,
     val showEmpty: Boolean = false,
@@ -37,12 +38,14 @@ class PostListViewModel : ViewModel() {
     private var loading = false
 
     fun refresh() {
-        // 下拉刷新入口：重置页码并清空错误/底部状态
+        // 下拉刷新入口：重置页码并清空错误/底部状态，刷新一批新笔记
         if (loading) return
         loading = true
+        FakePostRepository.refreshData()
         _state.update {
             it.copy(
                 isRefreshing = true,
+                isInitialLoading = it.items.isEmpty(),
                 showError = false,
                 footerState = FooterState.HIDDEN,
                 page = 1,
@@ -60,7 +63,6 @@ class PostListViewModel : ViewModel() {
 
     fun loadMore() {
         val current = _state.value
-        // 触底加载：已有请求或无更多时直接返回
         if (loading || !current.hasMore) return
         loading = true
         _state.update { it.copy(footerState = FooterState.LOADING) }
@@ -88,6 +90,7 @@ class PostListViewModel : ViewModel() {
             it.copy(
                 items = merged,
                 isRefreshing = false,
+                isInitialLoading = false,
                 showError = false,
                 showEmpty = merged.isEmpty(),
                 page = nextPage,
@@ -105,6 +108,7 @@ class PostListViewModel : ViewModel() {
             _state.update {
                 it.copy(
                     isRefreshing = false,
+                    isInitialLoading = false,
                     showError = true,
                     showEmpty = false,
                     items = emptyList(),

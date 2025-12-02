@@ -1,7 +1,6 @@
-package com.bytedance.xhsdemo.ui
+﻿package com.bytedance.xhsdemo.ui
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -69,7 +68,6 @@ class PostAdapter(
     }
 
     fun setFooterState(state: FooterState) {
-        // 根据 FooterState 动态插入/删除尾部视图
         val hadFooter = footerState != FooterState.HIDDEN
         footerState = state
         val hasFooter = footerState != FooterState.HIDDEN
@@ -91,7 +89,7 @@ class PostAdapter(
             }
             binding.titleView.text = post.title
             binding.authorView.text = post.authorName
-            binding.metaView.text = "${post.comments.size} 评论 · ${post.likes} 赞"
+            binding.metaView.text = "${post.comments.size} 条评论 · ${post.likes} 赞"
             binding.avatarView.load(post.authorAvatar) {
                 transformations(CircleCropTransformation())
                 placeholder(R.drawable.bg_avatar_placeholder)

@@ -20,6 +20,7 @@ import com.bytedance.xhsdemo.MainActivity
 import com.bytedance.xhsdemo.R
 import com.bytedance.xhsdemo.databinding.FragmentHomeBinding
 import com.bytedance.xhsdemo.model.Post
+import com.bytedance.xhsdemo.ui.FooterState
 import com.bytedance.xhsdemo.ui.PostAdapter
 import com.bytedance.xhsdemo.ui.PostListEvent
 import com.bytedance.xhsdemo.ui.PostListState
@@ -34,6 +35,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private lateinit var adapter: PostAdapter
     private val viewModel: PostListViewModel by activityViewModels()
+    private var autoBottomRefreshTriggered = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -64,17 +66,21 @@ class HomeFragment : Fragment() {
             onRetryClick = { viewModel.loadMore() }
         )
         val layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+        layoutManager.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
         binding.postList.layoutManager = layoutManager
         binding.postList.adapter = adapter
+        binding.postList.itemAnimator = null
         binding.postList.addItemDecoration(
             WaterfallSpacingDecoration(resources.getDimensionPixelSize(R.dimen.spacing_12))
         )
         binding.postList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                if (dy <= 0) return
+                if (dy <= 0 || binding.swipeRefresh.isRefreshing || autoBottomRefreshTriggered) return
                 val last = layoutManager.findLastVisibleItemPositions(null).maxOrNull() ?: 0
-                if (last >= adapter.itemCount - 4) {
+                if (last >= adapter.itemCount - 1) {
+                    autoBottomRefreshTriggered = true
+                    adapter.setFooterState(FooterState.LOADING)
                     viewModel.loadMore()
                 }
             }
@@ -82,7 +88,10 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupActions() {
-        binding.swipeRefresh.setOnRefreshListener { viewModel.refresh() }
+        binding.swipeRefresh.setOnRefreshListener {
+            binding.postList.scrollToPosition(0)
+            viewModel.refresh()
+        }
         binding.btnRetry.setOnClickListener { viewModel.refresh() }
         binding.btnMenu.setOnClickListener {
             (activity as? MainActivity)?.openDrawer()
@@ -112,11 +121,15 @@ class HomeFragment : Fragment() {
     }
 
     private fun renderState(state: PostListState) {
-        binding.swipeRefresh.isRefreshing = state.isRefreshing
+        binding.swipeRefresh.isRefreshing = state.isRefreshing && !state.isInitialLoading
         adapter.submitList(state.items.toMutableList())
-        binding.emptyView.isVisible = state.showEmpty
+        binding.emptyView.isVisible = state.showEmpty && !state.isRefreshing
         binding.errorView.isVisible = state.showError
+        binding.swipeRefresh.isVisible = !state.showError && !state.showEmpty
         adapter.setFooterState(state.footerState)
+        if (!state.isRefreshing) {
+            autoBottomRefreshTriggered = false
+        }
     }
 
     private fun handleEvent(event: PostListEvent) {

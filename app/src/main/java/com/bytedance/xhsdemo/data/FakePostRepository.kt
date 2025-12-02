@@ -1,4 +1,4 @@
-package com.bytedance.xhsdemo.data
+﻿package com.bytedance.xhsdemo.data
 
 import android.os.Handler
 import android.os.Looper
@@ -14,7 +14,10 @@ object FakePostRepository {
 
     private val mainHandler = Handler(Looper.getMainLooper())
     private val random = Random(System.currentTimeMillis())
-    // 一批演示用的封面/头像/标题池，模拟图文数据
+
+    private const val INITIAL_COUNT = 20
+    private const val TOTAL_COUNT = 100
+
     private val photos = listOf(
         "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=80",
         "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=80",
@@ -30,7 +33,6 @@ object FakePostRepository {
         "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=60",
         "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=200&q=60",
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=60",
-        "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=60",
         "https://images.unsplash.com/photo-1544723795-3fb6469f5b39?auto=format&fit=crop&w=200&q=60",
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=60"
     )
@@ -48,18 +50,17 @@ object FakePostRepository {
     private val posts = mutableListOf<Post>()
 
     init {
-        generatePosts(20)
+        generatePosts(INITIAL_COUNT)
     }
 
     fun fetchPosts(page: Int, pageSize: Int, callback: (Result<PageResult>) -> Unit) {
-        // 模拟接口：主线程延时 + 随机失败，再返回分页数据
         mainHandler.postDelayed({
-            val shouldFail = page > 1 && random.nextFloat() < 0.2f
+            val shouldFail = page > 1 && random.nextFloat() < 0.15f
             if (shouldFail) {
                 callback(Result.failure(IllegalStateException("网络开小差了，重试试试看")))
                 return@postDelayed
             }
-            ensureSize(page * pageSize + 4)
+            ensureSize(min(page * pageSize + 4, TOTAL_COUNT))
             val start = (page - 1) * pageSize
             val end = min(posts.size, start + pageSize)
             val data = if (start in 0 until end) {
@@ -67,7 +68,7 @@ object FakePostRepository {
             } else {
                 emptyList()
             }
-            val hasMore = end < posts.size
+            val hasMore = end < min(posts.size, TOTAL_COUNT)
             callback(Result.success(PageResult(data, hasMore)))
         }, 520)
     }
@@ -77,6 +78,11 @@ object FakePostRepository {
     }
 
     fun findPost(id: String): Post? = posts.firstOrNull { it.id == id }
+
+    fun refreshData() {
+        posts.clear()
+        generatePosts(INITIAL_COUNT)
+    }
 
     private fun ensureSize(target: Int) {
         if (posts.size < target) {
@@ -113,8 +119,8 @@ object FakePostRepository {
             "好会生活，想去同款地点！",
             "色彩太治愈了，点赞！",
             "求拍摄参数～",
-            "看完就想立刻出发旅行。",
-            "这也太会拍了吧"
+            "看完就想立刻出发旅行呢",
+            "这也太会拍了！"
         )
         val count = random.nextInt(1, 4)
         return (0 until count).map {
