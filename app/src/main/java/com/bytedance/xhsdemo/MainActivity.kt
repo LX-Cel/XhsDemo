@@ -21,6 +21,7 @@ import com.bytedance.xhsdemo.utils.ToastUtils
 import com.bytedance.xhsdemo.ui.home.HomeFragment
 import com.bytedance.xhsdemo.ui.placeholder.PlaceholderFragment
 import com.bytedance.xhsdemo.ui.profile.ProfilePageFragment
+import com.bytedance.xhsdemo.ui.weather.WeatherFragment
 import com.google.android.material.navigation.NavigationBarView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -131,7 +132,7 @@ class MainActivity : AppCompatActivity() {
             this,
             listOf(
                 HomeFragment(),
-                PlaceholderFragment.newInstance("市集页面敬请期待"),
+                WeatherFragment(),
                 PlaceholderFragment.newInstance("消息页面敬请期待"),
                 ProfilePageFragment()
             )

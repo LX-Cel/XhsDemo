@@ -48,7 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
-            android:text="市集"
+            android:text="天气"
             android:gravity="center"
             android:textSize="16sp"
             android:textColor="@color/xhs_gray"/>
