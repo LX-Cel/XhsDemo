@@ -62,23 +62,33 @@ app/
 
 ## 演示
 
-### 登录界面
-![登录界面](imgs/登录界面.png)
+### 主要界面展示 
 
-### 首页样式
-![首页](imgs/首页.png)
+<table>
+  <tr>
+    <td><img src="./imgs/登录界面.png" width="300px"></td>
+    <td><img src="./imgs/首页.png" width="300px"></td>
+    <td><img src="./imgs/天气页.png" width="300px"></td>
+  </tr>
+  <tr>
+    <td align="center">登录界面</td>
+    <td align="center">首页</td>
+    <td align="center">天气界面</td>
+  </tr>
+</table>
 
-### 天气页面样式
-![天气页面](imgs/天气页.png)
-
-### 个人中心页面样式
-![个人中心页面](imgs/个人中心页.png)
-
-### 侧边栏样式
-![侧边栏](imgs/侧边栏.png)
-
-### 设置界面
-![设置界面](imgs/设置界面.png)
+<table>
+  <tr>
+    <td><img src="./imgs/个人中心页.png" width="300px"></td>
+    <td><img src="./imgs/侧边栏.png" width="300px"></td>
+    <td><img src="./imgs/设置界面.png" width="300px"></td>
+  </tr>
+  <tr>
+    <td align="center">个人中心界面</td>
+    <td align="center">侧边栏</td>
+    <td align="center">设置界面</td>
+  </tr>
+</table>
 
 
 
