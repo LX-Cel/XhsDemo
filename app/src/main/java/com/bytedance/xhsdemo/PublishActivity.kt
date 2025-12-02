@@ -1,11 +1,10 @@
-package com.bytedance.xhsdemo
+﻿package com.bytedance.xhsdemo
 
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.MotionEvent
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -25,6 +24,7 @@ class PublishActivity : AppCompatActivity() {
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             selectedUri = uri
             if (uri != null) {
+                grantReadPersistPermission(uri)
                 // 选取本地图片后立即预览
                 binding.previewImage.load(uri) {
                     crossfade(true)
@@ -57,7 +57,7 @@ class PublishActivity : AppCompatActivity() {
         val post = Post(
             id = UUID.randomUUID().toString(),
             title = if (title.isNotBlank()) title else "我的新笔记",
-            content = if (content.isNotBlank()) content else "记录一下此刻的灵感。",
+            content = if (content.isNotBlank()) content else "记录一下此刻的灵感吧～",
             imageUrl = selectedUri?.toString() ?: DEFAULT_COVER,
             authorName = "我",
             authorAvatar = DEFAULT_AVATAR,
@@ -96,6 +96,17 @@ class PublishActivity : AppCompatActivity() {
             v.layoutParams.height = top
             v.requestLayout()
             insets
+        }
+    }
+
+    private fun grantReadPersistPermission(uri: Uri) {
+        try {
+            contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+        } catch (_: Exception) {
+            // 非可持久化 Uri 忽略异常
         }
     }
 
